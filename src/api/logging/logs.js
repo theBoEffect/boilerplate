@@ -12,12 +12,11 @@ export default {
         if(!logData.logTimestamp) logData.logTimestamp = Date.now();
         if(logData.code) logData.code = data.code.toUpperCase();
         const log = await dal.logObject(logData);
+        let out;
         if (write === true) {
-            console.log(JSON.parse(JSON.stringify(log)));
-            return dal.writeLogObject(log);
-        }
-        const out = JSON.parse(JSON.stringify(log));
-        out.persisted = false;
+            out = JSON.parse(JSON.stringify(await dal.writeLogObject(log)));
+            out.persisted = true;
+        } else out = JSON.parse(JSON.stringify(log));
         console.log(out);
         return out;
     },
