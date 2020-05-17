@@ -61,7 +61,7 @@ describe('API tests', () => {
             const date = new Date();
             expect(res.body).toStrictEqual({
                 data: {
-                    api: 'Boilerplate',
+                    api: pJson.name,
                     version: pJson.version,
                     baseURL: '/api',
                     copyright: `Copyright (c) ${date.getFullYear()} theBoEffect LLC`
