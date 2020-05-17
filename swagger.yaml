@@ -302,3 +302,13 @@ components:
               value:
                 type: integer
                 description: 'The integer, array or object to set the property at the above path to'
+          - required:
+              - op
+              - path
+            properties:
+              op:
+                type: string
+                enum: ['remove']
+              path:
+                type: string
+                description: 'A path to the property in the data model. For example /name/firstName or /emails/-'

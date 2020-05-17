@@ -8,7 +8,7 @@ const date = new Date();
 router.get('/version', (req, res) => {
     res.json( {
         data: {
-            api: 'Boilerplate',
+            api: p.name,
             version: p.version,
             baseURL: '/api',
             copyright: `Copyright (c) ${date.getFullYear()} theBoEffect LLC`
