@@ -45,7 +45,7 @@
     "passport": "^0.4.1",
     "passport-http": "^0.3.0",
     "passport-http-bearer": "^1.0.1",
-    "pug": "^2.0.4",
+    "pug": "^3.0.1",
     "regenerator-runtime": "^0.13.3",
     "serverless-http": "^2.3.2",
     "uuidv4": "^6.0.6",
