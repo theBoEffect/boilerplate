@@ -1,8 +1,8 @@
 import '@babel/register';
 import "regenerator-runtime/runtime";
-import mockingoose from 'mockingoose';
 import Model from '../src/api/logging/model';
 import log from '../src/api/logging/logs';
+const mockingoose = require('mockingoose')
 
 
 const oneLog = {

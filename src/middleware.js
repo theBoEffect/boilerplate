@@ -38,7 +38,7 @@ export default {
             data: {
                 api: p.name,
                 version: p.version,
-                copyright: `Copyright (c) ${date.getFullYear()} United Effects LLC`
+                copyright: `Copyright (c) ${date.getFullYear()} theBoEffect LLC`
             }
         });
     },
