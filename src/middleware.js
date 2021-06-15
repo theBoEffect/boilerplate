@@ -3,7 +3,12 @@ import Boom from '@hapi/boom';
 import handleErrors from './customErrorHandler';
 import { sayMiddleware } from './say';
 import swag from './swagger';
-const schema = new OpenApiValidator(swag);
+import mongoose from "mongoose";
+
+const p = require('../package.json');
+
+const date = new Date();
+const schema = new OpenApiValidator(swag, { ajvOptions: { formats: { email: true, password: true, uri: true, url: true, uuid: true } } });
 
 export default {
     cores (req, res, next) {
@@ -20,15 +25,32 @@ export default {
         return res.respond(error);
     },
     responseIntercept: sayMiddleware.responseIntercept,
+    async health (req, res) {
+        return res.json(
+            {
+                server: 'running',
+                db: mongoose.STATES[mongoose.connection.readyState]
+            }
+        );
+    },
+    async version (req, res) {
+        return res.json( {
+            data: {
+                api: p.name,
+                version: p.version,
+                copyright: `Copyright (c) ${date.getFullYear()} United Effects LLC`
+            }
+        });
+    },
     async schemaCheck(req, res, next) {
         try {
-            let path  = req.route.path;
+            let path  = `/api${req.route.path}`;
             await Promise.all(Object.keys(req.params).map((p)=>{
                 path = path.replace(`:${p}`, `{${p}}`);
             }));
-            schema.validate(req.method.toString().toLowerCase(), path.toLowerCase())(req, res, next);
+            return schema.validate(req.method.toString().toLowerCase(), path.toLowerCase())(req, res, next);
         } catch (error) {
-            next(Boom.expectationFailed('OpenAPI Schema Validation'));
+            next(Boom.expectationFailed(error.message || 'Something unexpected went wrong validating OpenAPI Schema'));
         }
-    }
+    },
 }

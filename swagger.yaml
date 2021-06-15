@@ -255,6 +255,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Log'
+
     jsonPatch:
       additionalProperties: false
       description: Details for JSONPatch can be found at http://jsonpatch.com/
@@ -266,6 +267,7 @@ components:
           - required:
               - op
               - path
+              - value
             properties:
               op:
                 type: string
@@ -279,6 +281,7 @@ components:
           - required:
               - op
               - path
+              - value
             properties:
               op:
                 type: string
@@ -292,6 +295,20 @@ components:
           - required:
               - op
               - path
+              - value
+            properties:
+              op:
+                type: string
+                enum: ['replace', 'add', 'remove', 'move', 'copy', 'test']
+              path:
+                type: string
+                description: 'A path to the property in the data model. For example /name/firstName or /emails/-'
+              value:
+                type: boolean
+          - required:
+              - op
+              - path
+              - value
             properties:
               op:
                 type: string

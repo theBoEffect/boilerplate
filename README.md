@@ -62,8 +62,9 @@ If you'd rather use a different database or ODM, the following modifications are
 * Update the following in package.json
     * name
     * author
+    * person
     * description
-    * url (your website or project website)
+    * homepage (your website or project website)
     * logo (your logo or project logo url)
 * Copy ./.env_ci to ./.env and modify env.dev.json to set runtime configuration data
 * yarn
