@@ -1,6 +1,6 @@
 {
   "name": "boilerplate-service",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A microservice boilerplate that runs optionally as docker or lambda",
   "private": false,
   "license": "MIT",
@@ -68,7 +68,7 @@
     "eslint-plugin-mocha": "^6.2.2",
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-react-hooks": "^1.7.0",
-    "jest": "^25.1.0",
+    "jest": "^27.0.4",
     "mockingoose": "^2.13.2",
     "nodemon": "^2.0.7",
     "serverless-apigw-binary": "^0.4.4",

@@ -56,9 +56,21 @@ If you'd rather use a different database or ODM, the following modifications are
 * validate that slsapp and start both correctly implement connection.js
 * in each of your api/resources, change the dal.js file to access the new DB using the new ODM/ORM
 
-## Instruction
+## Quickstart Run
 
 * Click "Use this Template" at the top  of the repository and setup your project
+* clone your project to your machine
+* start mongodb on port 27017
+    * I find the easiest way to do this is via docker in a terminal
+    * docker run -p 27017:27017 mongo
+* Copy ./.env_ci to ./.env and modify env.dev.json to set runtime configuration data
+* yarn
+* yarn test
+* yarn run dev
+* navigate to localhost:3000
+
+### Configure For Your Service
+
 * Update the following in package.json
     * name
     * author
@@ -66,10 +78,7 @@ If you'd rather use a different database or ODM, the following modifications are
     * description
     * homepage (your website or project website)
     * logo (your logo or project logo url)
-* Copy ./.env_ci to ./.env and modify env.dev.json to set runtime configuration data
-* yarn
-* yarn test
-* yarn run dev
+* Do the above quickstart now...
 * add src/api resources using the logging example
     * You will also want to update the ci/codefresh.yaml file to point to your repo
     * Note that my CI only tests, there is no deploy stage, you'll need to add it
