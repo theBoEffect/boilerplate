@@ -18,11 +18,20 @@ export default {
         next();
     },
     catch404 (req, res, next) {
-        next(handleErrors.catch404());
+        try {
+            next(handleErrors.catch404());
+        } catch (error) {
+            next(error);
+        }
     },
     async catchErrors (err, req, res, next) {
-        const error = await handleErrors.parse(err);
-        return res.respond(error);
+        try {
+            const error = await handleErrors.parse(err);
+            return res.respond(error);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: 'Unexpected Error - See Logs', message: error.message || error });
+        }
     },
     responseIntercept: sayMiddleware.responseIntercept,
     async health (req, res) {
@@ -44,7 +53,7 @@ export default {
     },
     async schemaCheck(req, res, next) {
         try {
-            let path  = `/api${req.route.path}`;
+            let path  = `${req.route.path}`;
             await Promise.all(Object.keys(req.params).map((p)=>{
                 path = path.replace(`:${p}`, `{${p}}`);
             }));

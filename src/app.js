@@ -2,7 +2,6 @@ import express from 'express';
 import path from 'path';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
 
 import { Root, Api } from './routes';
 import middle from './middleware';
@@ -13,13 +12,13 @@ const app = express();
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'pug');
 if(config.ENV!=='production') app.use(logger('tiny'));
-app.use(bodyParser.json({ type: ['json', '+json'] }));
-app.use(bodyParser.urlencoded({
-    extended: false
+app.use(middle.responseIntercept);
+app.use(express.json({ type: ['json', '+json'] }));
+app.use(express.urlencoded({
+    extended: true
 }));
 app.use(cookieParser());
 app.use(middle.cores);
-app.use(middle.responseIntercept);
 
 //content and APIs
 app.use(express.static(path.join(__dirname, '../public')));
