@@ -1,5 +1,6 @@
 import '@babel/register';
 import "regenerator-runtime/runtime";
+import t from './testhelper';
 import { say, sayMiddleware } from '../src/say';
 
 describe('Say library tests', () => {
@@ -67,8 +68,7 @@ describe('Say library tests', () => {
                 expect(res.json).toHaveBeenCalledWith({ type: "TEST", data: { a: 'test' }});
             })
         } catch (error) {
-            console.error(error);
-            fail();
+            t.fail(error);
         }
 
     })

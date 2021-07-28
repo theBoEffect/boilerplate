@@ -2,6 +2,8 @@ import '@babel/register';
 import "regenerator-runtime/runtime";
 import Model from '../src/api/logging/model';
 import log from '../src/api/logging/logs';
+import t from './testhelper';
+
 const mockingoose = require('mockingoose')
 
 
@@ -62,8 +64,7 @@ describe('Log DAL tests', () => {
             expect(res).toMatchObject(expected);
             expect(res.persisted).toBe(true);
         } catch (error) {
-            console.error(error);
-            fail();
+            t.fail(error);
         }
 
     });
@@ -88,8 +89,7 @@ describe('Log DAL tests', () => {
             expect(res.message).toBe(expected.message);
             expect(res.details).toStrictEqual(expected.details);
         } catch (error) {
-            console.error(error);
-            fail();
+            t.fail(error);
         }
 
     });
@@ -105,8 +105,7 @@ describe('Log DAL tests', () => {
             const res = JSON.parse(JSON.stringify(result));
             expect(res).toMatchObject(expected);
         } catch (error) {
-            console.error(error);
-            fail();
+            t.fail(error);
         }
     });
 
@@ -124,8 +123,7 @@ describe('Log DAL tests', () => {
             const res = JSON.parse(JSON.stringify(result));
             expect(res).toMatchObject(expected);
         } catch (error) {
-            console.error(error);
-            fail();
+            t.fail(error);
         }
     });
 
@@ -151,8 +149,7 @@ describe('Log DAL tests', () => {
             const res = JSON.parse(JSON.stringify(result));
             expect(res.message).toBe(expected.message);
         } catch (error) {
-            console.error(error);
-            fail();
+            t.fail(error);
         }
     });
 
@@ -166,8 +163,7 @@ describe('Log DAL tests', () => {
             expect(res.message).toBe('Error recorded and sent out as http response.');
             expect(res.details).toStrictEqual({ info: 'testing http errors'});
         } catch (error) {
-            console.error(error);
-            fail();
+            t.fail(error);
         }
     });
 

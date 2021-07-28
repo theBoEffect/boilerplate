@@ -3,6 +3,8 @@ import "regenerator-runtime/runtime";
 import request from 'supertest';
 import app from '../src/app';
 import swagger from "../src/swagger";
+import t from './testhelper';
+
 const config = require('../src/config');
 const pJson = require('../package');
 
@@ -17,8 +19,7 @@ describe('API tests', () => {
                 .get('/api/xyz');
             expect(res.statusCode).toEqual(404);
         } catch (error) {
-            console.error(error);
-            fail();
+            t.fail(error);
         }
 
     });
@@ -36,8 +37,7 @@ describe('API tests', () => {
             expect(res.statusCode).toEqual(200);
             expect(res.body).toStrictEqual(swag);
         } catch (error) {
-            console.error(error);
-            fail();
+            t.fail(error);
         }
     });
 
@@ -48,8 +48,7 @@ describe('API tests', () => {
             expect(res.statusCode).toEqual(200);
             expect(res.body.server).toStrictEqual('running');
         } catch (error) {
-            console.error(error);
-            fail();
+            t.fail(error);
         }
     });
 
@@ -67,8 +66,7 @@ describe('API tests', () => {
                 }
             });
         } catch (error) {
-            console.error(error);
-            fail();
+            t.fail(error);
         }
     });
 });
