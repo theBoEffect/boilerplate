@@ -271,7 +271,7 @@ components:
             properties:
               op:
                 type: string
-                enum: ['replace', 'add', 'remove', 'move', 'copy', 'test']
+                enum: ['replace', 'add', 'remove', 'test']
               path:
                 type: string
                 description: 'A path to the property in the data model. For example /name/firstName or /emails/-'
@@ -285,7 +285,7 @@ components:
             properties:
               op:
                 type: string
-                enum: ['replace', 'add', 'remove', 'move', 'copy', 'test']
+                enum: ['replace', 'add', 'remove', 'test']
               path:
                 type: string
                 description: 'A path to the property in the data model. For example /name/firstName or /emails/-'
@@ -299,7 +299,7 @@ components:
             properties:
               op:
                 type: string
-                enum: ['replace', 'add', 'remove', 'move', 'copy', 'test']
+                enum: ['replace', 'add', 'remove', 'test']
               path:
                 type: string
                 description: 'A path to the property in the data model. For example /name/firstName or /emails/-'
@@ -312,7 +312,7 @@ components:
             properties:
               op:
                 type: string
-                enum: ['replace', 'add', 'remove', 'move', 'copy', 'test']
+                enum: ['replace', 'add', 'remove', 'test']
               path:
                 type: string
                 description: 'A path to the property in the data model. For example /name/firstName or /emails/-'
@@ -329,3 +329,17 @@ components:
               path:
                 type: string
                 description: 'A path to the property in the data model. For example /name/firstName or /emails/-'
+          - required:
+              - op
+              - from
+              - path
+            properties:
+              op:
+                type: string
+                enum: ['copy', 'move']
+              from:
+                type: string
+                description: 'Path to copy or move from'
+              path:
+                type: string
+                description: 'Path to copy or move to'
