@@ -1,6 +1,6 @@
 {
   "name": "boilerplate-service",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A microservice boilerplate that runs optionally as docker or lambda",
   "private": false,
   "license": "MIT",
