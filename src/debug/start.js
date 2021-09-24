@@ -1,8 +1,11 @@
-const app = require('./app').default;
+require('@babel/register');
+require('regenerator-runtime');
+
+const app = require('../app').default;
 const http = require('http');
 
-const connection = require('./connection').default;
-const config = require('./config');
+const connection = require('../connection').default;
+const config = require('../config');
 
 let mongoConnect = config.MONGO;
 
