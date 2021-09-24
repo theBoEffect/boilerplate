@@ -2,6 +2,7 @@
 
 A boilerplate micro service that runs as docker or lambda. Click "Use this Template" to use this for your service.
 
+[![CI](https://github.com/theBoEffect/boilerplate/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/theBoEffect/boilerplate/actions/workflows/main.yml)
 
 #### follow me:
 * [twitter](https://twitter.com/theboeffect)
