@@ -10,7 +10,7 @@ if (!mongoConnect) {
     process.exit(1);
 }
 
-console.info(`Connection string: ${mongoConnect}`);
+if(process.env.NODE_ENV === 'dev') console.info(`Connection string: ${mongoConnect}`);
 connection.create(mongoConnect, config.REPLICA);
 
 function normalizePort(val) {
@@ -32,5 +32,16 @@ function normalizePort(val) {
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-
-module.exports.handler = sls(app);
+const handler = sls(app, {
+    request: (req, event, context) => {
+        req.requestId = context.awsRequestId;
+    }
+});
+module.exports.handler = async (event, context) => {
+    // eslint-disable-next-line no-console
+    console.log(`START GATEWAY REQUEST: ${event.requestContext.requestId}`);
+    const result = await handler(event, context);
+    // eslint-disable-next-line no-console
+    console.log(`END GATEWAY REQUEST: ${event.requestContext.requestId}`);
+    return result;
+};

@@ -1,5 +1,4 @@
 const app = require('./app').default;
-const http = require('http');
 
 const connection = require('./connection').default;
 const config = require('./config');
@@ -39,20 +38,11 @@ function onError(error) {
     }
 }
 
-function onListening() {
-    const addr = server.address();
-    const bind = typeof addr === 'string'
-        ? 'pipe ' + addr
-        : 'port ' + addr.port;
-    console.error(`Listening on ${bind}`);
-}
-
-console.info(`Connection string: ${mongoConnect}`);
+if(process.env.NODE_ENV === 'dev') console.info(`Connection string: ${mongoConnect}`);
 connection.create(mongoConnect, config.REPLICA);
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
-const server = http.createServer(app);
-
-server.listen(port);
+const server = app.listen(port, () => {
+    console.error(`Listening on ${port}`);
+});
 server.on('error', onError);
-server.on('listening', onListening);

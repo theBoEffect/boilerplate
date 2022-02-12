@@ -24,9 +24,24 @@ export default {
             next(error);
         }
     },
+    async requestId(req, res, next) {
+        try {
+            if(req.requestId) return next();
+            // try mapping from gateway if the request is missing...
+            if(req.headers['x-request-id']) {
+                req.requestId = req.headers['x-request-id'];
+                return next();
+            }
+            // create our own
+            req.requestId = uuid();
+            return next();
+        } catch (error) {
+            next(error);
+        }
+    },
     async catchErrors (err, req, res, next) {
         try {
-            const error = await handleErrors.parse(err);
+            const error = await handleErrors.parse(err, req.requestId);
             return res.respond(error);
         } catch (error) {
             console.error(error);

@@ -13,6 +13,7 @@ app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'pug');
 if(config.ENV!=='production') app.use(logger('tiny'));
 app.use(middle.responseIntercept);
+app.use(middle.requestId);
 app.use(express.json({ type: ['json', '+json'] }));
 app.use(express.urlencoded({
     extended: true
