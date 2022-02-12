@@ -1,12 +1,23 @@
 service: ${env:NAME, file(./package.json):name}
-
+variablesResolutionMode: 20210326
+custom:
+  local_env: ${sls:stage, 'test'}
+  customDomain:
+    domainName: ${env:SWAGGER, file(./.env/env.${self:custom.local_env}.json):SWAGGER}
+    basePath: ''
+    stage: ${sls:stage}
+    createRoute53Record: true
+  apigwBinary:
+    types:
+      - 'multipart/form-data'
+      - 'image/jpeg'
+      - 'image/png'
 provider:
   name: aws
-  runtime: nodejs10.x
-  stage: ${env:NODE_ENV, file(./.env/env.${self:provider.env}.json):NODE_ENV}
-  env: ${env:SLS_ENV, 'test'}
+  runtime: nodejs14.x
   region: us-east-1
   timeout: 30
+  lambdaHashingVersion: 20201221
   environment:
     NODE_ENV: ${env:NODE_ENV, file(./.env/env.${self:provider.env}.json):NODE_ENV}
     SWAGGER: ${env:SWAGGER, file(./.env/env.${self:provider.env}.json):SWAGGER}
@@ -17,28 +28,16 @@ provider:
     WRITE_LOGS_TO_DB: ${env:WRITE_LOGS_TO_DB, file(./.env/env.${self:provider.env}.json):WRITE_LOGS_TO_DB}
 
 package:
-  exclude:
-    - src/**
+  patterns:
+    - '!src/**'
 
 plugins:
- - serverless-domain-manager
- - serverless-apigw-binary
-
-custom:
-  customDomain:
-    domainName: ${env:SWAGGER, file(./.env/env.${self:provider.env}.json):SWAGGER}
-    basePath: ''
-    stage: ${self:provider.stage}
-    createRoute53Record: true
-  apigwBinary:
-    types:
-      - 'multipart/form-data'
-      - 'image/jpeg'
-      - 'image/png'
+  - serverless-domain-manager
+  - serverless-apigw-binary
 
 functions:
   app:
     handler: dist/slsapp.handler
     events:
       - http: ANY /
-      - http: 'ANY {proxy+}'
+      - http: 'ANY /{proxy+}'
