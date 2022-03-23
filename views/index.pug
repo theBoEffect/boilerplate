@@ -2,21 +2,16 @@ extends layout
 
 block content
   section#head.section
-    .container.keyPad
-      .row
-        .col-md-10.col-lg-10.col-md-offset-1.col-lg-offset-1.text-center
-          h2.title
-            a(href=url, style="color: inherit;")=by
-          div.tagline="Copyright © " + year + " All Rights Reserved"
-          h3.subtitle=title
+    .row
+      .col-lg-12
+        .index-container
+          h2
+            a.a-decoration.color-grey(href=url)=by
+          h6="Copyright © " + year + " All Rights Reserved"
+          h3=title
             span.version=" v" + version
-          h4.tagline=description
-          p
-          .row
-            .col-md-4
-              a.btn.btn-default.btn-lg.btn-block(href='/swagger' style="font-size: 1.6em;") Swagger&nbsp;
-            .col-md-4
-              a.btn.btn-default.btn-lg.btn-block(href=home style="font-size: 1.6em;") Project&nbsp;
-            .col-md-4
-              a.btn.btn-default.btn-lg.btn-block(href='/api' style="font-size: 1.6em;") Documentation&nbsp;
-
+          p.m-t-20=description
+          div
+            a.btn.btn-outline-dark.m-r-10(href='/swagger') Swagger&nbsp;
+            a.btn.btn-outline-dark.m-r-10(href=home) Project&nbsp;
+            a.btn.btn-outline-dark.m-r-10(href='/api') Documentation&nbsp;
