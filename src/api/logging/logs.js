@@ -42,6 +42,10 @@ export default {
             message: 'Error recorded and sent out as http response.',
             details: data
         };
+        if(data._id) {
+            logData._id = data._id;
+            delete logData.details._id;
+        }
         return this.writeLog(logData, write);
     },
 
