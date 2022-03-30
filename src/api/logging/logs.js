@@ -42,7 +42,7 @@ export default {
             message: 'Error recorded and sent out as http response.',
             details: data
         };
-        if(data._id) {
+        if(data?._id) {
             logData._id = data._id;
             delete logData.details._id;
         }
