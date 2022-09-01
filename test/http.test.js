@@ -62,7 +62,7 @@ describe('API tests', () => {
                 data: {
                     api: pJson.name,
                     version: pJson.version,
-                    copyright: `Copyright (c) ${date.getFullYear()} theBoEffect LLC`
+                    copyright: `Copyright (c) ${date.getFullYear()} ${pJson.author}`
                 }
             });
         } catch (error) {
