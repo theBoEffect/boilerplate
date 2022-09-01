@@ -7,7 +7,7 @@ const RESOURCE = 'LOG';
 const api = {
     async writeLog(req, res, next) {
         try {
-            if (!req.body.message) return next(Boom.preconditionRequired('message is required'));
+            if (!req.body.message) throw Boom.preconditionRequired('message is required');
             const result = await logs.writeLog(req.body);
             return res.respond(say.created(result, RESOURCE));
         } catch (error) {
@@ -24,9 +24,9 @@ const api = {
     },
     async getLog(req, res, next) {
         try {
-            if(!req.params.id) return next(Boom.preconditionRequired('Must provide id'));
+            if(!req.params.id) throw Boom.preconditionRequired('Must provide id');
             const result = await logs.getLog(req.params.id);
-            if (!result) return next(Boom.notFound(`id requested was ${req.params.id}`));
+            if (!result) throw Boom.notFound(`id requested was ${req.params.id}`);
             return res.respond(say.ok(result, RESOURCE));
         } catch (error) {
             next(error);

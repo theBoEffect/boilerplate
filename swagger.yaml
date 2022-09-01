@@ -27,8 +27,6 @@ paths:
           description: Invalid input
         '500':
           description: Unknown error
-      security:
-        - UEAuth: []
       requestBody:
         content:
           application/json:
@@ -80,8 +78,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Logs'
-      security:
-        - UEAuth: []
   '/logs/{id}':
     get:
       tags:
@@ -107,8 +103,6 @@ paths:
           description: Invalid code supplied
         '404':
           description: Log not found
-      security:
-        - UEAuth: []
     patch:
       tags:
         - System
@@ -133,8 +127,6 @@ paths:
           description: Invalid input
         '500':
           description: Unknown error
-      security:
-        - UEAuth: []
       requestBody:
         content:
           application/json:
@@ -151,36 +143,36 @@ paths:
       responses:
         '200':
           description: GET successful
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/success'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/defaultError'
+                $ref: '#/components/schemas/error'
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/defaultError'
+                $ref: '#/components/schemas/error'
+
+#Global Security
+security:
+  - bearer: []
 
 servers:
   - url: http://localhost:3000/api
+
 components:
   securitySchemes:
-    UEAuth:
+    bearer:
       type: http
       scheme: bearer
-      name: Authorization
-      description: 'For both UEAuth and other Bearer based tokens, simply enter the token (prefixing with "bearer" is not required).'
+      description: 'Bearer based tokens, simply enter the token (prefixing with "bearer" is not required).'
     basicAuth:
       type: http
       scheme: basic
-    OpenID:
+    openId:
       type: openIdConnect
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
     OAuth2:
@@ -194,25 +186,22 @@ components:
             write: Grants write access
             admin: Grants access to admin operations
   schemas:
-    success:
+    error:
       required:
-        - err
+        - id
+        - error
         - message
       properties:
-        err:
+        id:
           type: string
-        message:
-          type: object
-    defaultError:
-      required:
-        - err
-        - message
-      properties:
-        err:
-          type: integer
-          format: int32
+          format: uuid
+          description: unique ID for the error
+        error:
+          type: string
+          description: type of error
         message:
           type: string
+          description: additional information about the error
     Log:
       type: object
       properties:

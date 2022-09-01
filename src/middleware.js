@@ -63,7 +63,7 @@ export default {
             data: {
                 api: p.name,
                 version: p.version,
-                copyright: `Copyright (c) ${date.getFullYear()} theBoEffect LLC`
+                copyright: `Copyright (c) ${date.getFullYear()} ${p.author}`
             }
         });
     },
