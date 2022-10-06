@@ -43,16 +43,19 @@ const capi = {
 	},
 	async validateAG(req, res, next) {
 		try {
-			if(!req.params.group) throw Boom.badRequest('Group is required');
 			if(!req.group) {
-				const url = `${config.CORE_EOS_ISSUER}/api/group-info/${req.params.group}`;
+				let group;
+				if(!req.params.group) {
+					group = config.CORE_EOS_PLATFORM_ID;
+				} else group = req.params.group;
+				const url = `${config.CORE_EOS_ISSUER}/api/group-info/${group}`;
 				let result;
 				try {
 					result = await axios.get(url);
 				} catch (error) {
-					throw Boom.notFound(`Unknown platform id: ${req.params.group}`);
+					throw Boom.notFound(`Unknown platform id: ${group}`);
 				}
-				if(!result?.data?.data) throw Boom.notFound(`Unknown platform id: ${req.params.group}`);
+				if(!result?.data?.data) throw Boom.notFound(`Unknown platform id: ${group}`);
 				req.group = result.data.data;
 			}
 			req.authGroup = req.group.groupId;

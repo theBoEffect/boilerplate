@@ -156,7 +156,7 @@ function oidcValidate (CC = false, platformOverride = false) {
 				const preDecoded = jwt.decode(token, {complete: true});
 				if (!preDecoded?.payload?.group) return next(null, false);
 				if (!preDecoded?.payload?.iss) return next(null, false);
-				authGroup = preDecoded?.payload?.group;
+				authGroup = req.params.group || preDecoded?.payload?.group;
 				issuer = preDecoded?.payload?.iss;
 				if (CC === true) {
 					agData = await getAGInfo(authGroup);
@@ -190,8 +190,10 @@ function oidcValidate (CC = false, platformOverride = false) {
 				}
 			}
 			//opaque token
-			if (!req.params.group) return next(null, false);
-			authGroup = req.params.group;
+			if (!req.params.group) {
+				//if there is no group param, assume the context is your own core eos platform instance
+				authGroup = config.CORE_EOS_PLATFORM_ID;
+			} else authGroup = req.params.group;
 			if (CC === true) {
 				agData = await getAGInfo(authGroup);
 				clientId = config.CORE_THIS_SERVICE_CLIENT_ID;
