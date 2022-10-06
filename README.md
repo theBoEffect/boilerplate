@@ -25,6 +25,7 @@ A boilerplate micro service that runs as docker or lambda. Click "Use this Templ
 
 ## Features
 
+* Authentication and Authorization via Core EOS (unitedeffects.com)
 * Configurable MongoDB connection to stand-alone or replica (or atlas)
 * oData support for queries
 * JSON Patch implemented for updates with mongodb

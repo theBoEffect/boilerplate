@@ -9,8 +9,14 @@ const config = {
     MONGO: process.env.MONGO || envVars.MONGO || 'mongodb://localhost:27017/your-db',
     SWAGGER: process.env.SWAGGER || envVars.SWAGGER || 'localhost:3000',
     REPLICA: process.env.REPLICA || envVars.REPLICA || 'rs0',
-    PERSIST_HTTP_ERRORS: process.env.PERSIST_HTTP_ERRORS || envVars.PERSIST_HTTP_ERRORS || false,
-    WRITE_LOGS_TO_DB: process.env.WRITE_LOGS_TO_DB || envVars.WRITE_LOGS_TO_DB || false
+    CORE_EOS_ISSUER: process.env.CORE_EOS_ISSUER || envVars.CORE_EOS_ISSUER || 'rs0',
+    CORE_EOS_PLATFORM_ID: process.env.CORE_EOS_PLATFORM_ID || envVars.CORE_EOS_PLATFORM_ID || 'rs0',
+    CORE_THIS_SERVICE_CC_AUTHORITY: process.env.CORE_THIS_SERVICE_CC_AUTHORITY || envVars.CORE_THIS_SERVICE_CC_AUTHORITY || 'rs0',
+    CORE_THIS_SERVICE_CLIENT_ID: process.env.CORE_THIS_SERVICE_CLIENT_ID || envVars.CORE_THIS_SERVICE_CLIENT_ID || 'rs0',
+    CORE_THIS_SERVICE_CLIENT_SECRET: process.env.CORE_THIS_SERVICE_CLIENT_SECRET || envVars.CORE_THIS_SERVICE_CLIENT_SECRET || 'rs0',
+    // deprecating the below
+    PERSIST_HTTP_ERRORS: false,
+    WRITE_LOGS_TO_DB: false
 };
 
 module.exports = config;

@@ -5,6 +5,9 @@ import handleErrors from './customErrorHandler';
 import { sayMiddleware } from './say';
 import swag from './swagger';
 import mongoose from "mongoose";
+import auth from './auth/auth';
+import core from './api/core/core';
+import permissions from './permissions';
 
 const p = require('../package.json');
 
@@ -78,4 +81,12 @@ export default {
             next(Boom.expectationFailed(error.message || 'Something unexpected went wrong validating OpenAPI Schema'));
         }
     },
+    validateAG: core.validateAG,
+    getOrgContext: core.getOrgContext,
+    isAuthenticated: auth.isAuthenticated,
+    isPlatformAuthenticated: auth.isPlatform,
+    isOAuthSecured: auth.isOAuthSecured,
+    isAnyAuth: auth.isAnyAuth,
+    isCCorPlatform: auth.isCCorPlatform,
+    enforce: permissions.enforce
 }
