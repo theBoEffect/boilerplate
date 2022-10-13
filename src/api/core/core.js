@@ -65,11 +65,12 @@ const capi = {
 			next(error);
 		}
 	},
-	async getServiceCC(authGroup) {
+	async getServiceCC(audience, refresh = false) {
 		try {
-			let token = await cache.getToken(authGroup);
+			const authGroup = config.CORE_THIS_SERVICE_CC_AUTHORITY;
+			let token = (refresh === false) ? await cache.getToken((audience) ? audience : authGroup) : undefined;
 			if(!token) {
-				const url = `${config.CORE_EOS_ISSUER}/${config.CORE_THIS_SERVICE_CC_AUTHORITY}/token`;
+				const url = `${config.CORE_EOS_ISSUER}/${authGroup}/token`;
 				const jwt = await getSecretJwt(url);
 				const options = {
 					method: 'post',
@@ -81,13 +82,13 @@ const capi = {
 						grant_type: 'client_credentials',
 						client_assertion_type: CLIENT_ASSERTION_TYPE,
 						client_assertion: jwt,
-						audience: `${config.CORE_EOS_ISSUER}/${config.CORE_THIS_SERVICE_CC_AUTHORITY}`,
+						audience: `${config.CORE_EOS_ISSUER}/${authGroup}`,
 						scope: 'access'
 					})
 				};
 				const data = await axios(options);
 				token = data?.data?.access_token;
-				await cache.cacheToken(authGroup, token);
+				await cache.cacheToken((audience) ? audience : authGroup, token);
 			}
 			return token;
 		} catch (error) {

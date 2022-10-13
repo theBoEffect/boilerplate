@@ -94,7 +94,7 @@ async function runDecodedChecks(token, issuer, decoded, authGroup, clientId, req
 	if(!decoded.group) {
 		throw new Error('No Auth Group detected in token');
 	}
-	if(decoded.group !== authGroup) {
+	if(decoded.group !== authGroup && decoded.group !== config.CORE_EOS_PLATFORM_ID) {
 		throw new Error('Auth Group does not match');
 	}
 
