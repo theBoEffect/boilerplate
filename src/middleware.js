@@ -84,7 +84,7 @@ export default {
     validateAG: core.validateAG,
     getOrgContext: core.getOrgContext,
     isAuthenticated: auth.isAuthenticated,
-    isPlatformAuthenticated: auth.isPlatform,
+    isPlatformAuthenticated: auth.isPlatformAuthenticated,
     isOAuthSecured: auth.isOAuthSecured,
     isAnyAuth: auth.isAnyAuth,
     isCCorPlatform: auth.isCCorPlatform,

@@ -12,7 +12,7 @@ const api = {
         try {
             let access = req.authInfo;
             // Let root folks through....
-            if (access?.group === config.CORE_EOS_ROOT_ID && access.client_credential !== true) return next();
+            if (access?.group === config.CORE_EOS_PLATFORM_ID && access.client_credential !== true) return next();
             if(!req.orgContext) throw Boom.forbidden('No context for permissions');
             // check that permission is not a url
             // if x-access-url is present.... (only on jwts...)
@@ -24,10 +24,19 @@ const api = {
              * At this point, you need to check permissions against a product. You can map one specifically and query it here
              * from your DB or config, or you can just use the default as the code currently does
              *
-             * if you want to set up a config, you could define products as...
-             * products = config.YOUR_PRODUCT_ARRAY
+             * Often at UE we actually build a mapping function to store product associations, here is an example:
+             *   const p = await map.getOneByAG(req.authGroup);
+             *   if(!req.mapping) req.mapping = p;
+             *   if(!p) throw Boom.badRequest('This Auth Group has not opted into the Data Inventory product');
+             *   if(p.active !== true) throw Boom.forbidden('Not active');
+             *   if(p.locked === true) throw Boom.forbidden('Locked');
+             *   const productAccess = access?.['x-access-products']?.[req.orgContext].split(' ').filter((a) => {
+             *       return (a.includes(p.coreProductId));
+             *   });
              */
-            const products = req.group?.core?.products; //grabbing default products from UE CORE
+                // if we've provided a specific product, use it. otherwise, assume it's the platform product id from UE CORE
+            const products = (config.CORE_ASSOCIATED_PRODUCT_ID) ?
+                [config.CORE_ASSOCIATED_PRODUCT_ID] : req.group?.core?.products;
             if(!products?.length) throw Boom.forbidden();
             const productAccess = access?.['x-access-products']?.[req.orgContext].split(' ').filter((a) => {
                 const found = products.filter((pr) => {
@@ -52,7 +61,6 @@ const api = {
             req.allPermissions = permissions;
             if(!permissions.length) throw Boom.forbidden('You do not have permissions');
             req.userPermissions = await mapper(req, coded, permissions);
-            console.info(req.userPermissions);
             req.enforceOwner = false;
             const owner = req.userPermissions.filter((p) => {
                 return (p.includes(':own'));

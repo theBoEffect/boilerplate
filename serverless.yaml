@@ -29,7 +29,7 @@ provider:
     CORE_THIS_SERVICE_CC_AUTHORITY: ${env:CORE_THIS_SERVICE_CC_AUTHORITY, file(./.env/env.${self:custom.local_env}.json):CORE_THIS_SERVICE_CC_AUTHORITY}
     CORE_THIS_SERVICE_CLIENT_ID: ${env:CORE_THIS_SERVICE_CLIENT_ID, file(./.env/env.${self:custom.local_env}.json):CORE_THIS_SERVICE_CLIENT_ID}
     CORE_THIS_SERVICE_CLIENT_SECRET: ${env:CORE_THIS_SERVICE_CLIENT_SECRET, file(./.env/env.${self:custom.local_env}.json):CORE_THIS_SERVICE_CLIENT_SECRET}
-
+    CORE_ASSOCIATED_PRODUCT_ID: ${env:CORE_ASSOCIATED_PRODUCT_ID, file(./.env/env.${self:custom.local_env}.json):CORE_ASSOCIATED_PRODUCT_ID}
 package:
   patterns:
     - '!src/**'
