@@ -1,30 +1,19 @@
 import mongoose from 'mongoose';
 
-const config = require('./config');
-
 let i = 0;
 const connect = {
     connectOptions() {
         return {
-            keepAlive: 300000,
+            keepAlive: true,
             connectTimeoutMS: 10000,
             useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useFindAndModify: false,
-            useCreateIndex: true,
-            promiseLibrary: Promise,
+            useUnifiedTopology: true
         };
     },
-    replicaCheck(options, replica, env) {
-        if (config.ENV !== env) {
-            options.replicaSet = replica;
-        }
-        return options;
-    },
-    async create(mongoConnect, replica) {
+    async create(mongoConnect) {
         try {
+            mongoose.set('strictQuery', true);
             let mongoOptions = this.connectOptions();
-            mongoOptions = this.replicaCheck(mongoOptions, replica, 'dev');
             console.error(`mongo connecting - try: ${i}`);
             i++;
             await mongoose.connect(`${mongoConnect}?authSource=admin`, mongoOptions);
@@ -33,7 +22,7 @@ const connect = {
             console.error(`******** DB attempted and failed:  ${mongoConnect} ********`);
             console.error(err);
             console.error('Retrying Connection');
-            if (i < 20) return connect.create(mongoConnect, replica);
+            if (i < 20) return connect.create(mongoConnect);
             console.info('Retry limit for connection attempts hit. Ending process');
             return process.exit(1);
         }

@@ -42,7 +42,7 @@ function onError(error) {
 }
 
 console.info(`Connection string: ${mongoConnect}`);
-connection.create(mongoConnect, config.REPLICA);
+connection.create(mongoConnect);
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 const server = app.listen(port, () => {

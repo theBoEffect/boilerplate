@@ -181,75 +181,13 @@ describe('Test connectjs', () => {
     test('ensure mongoose options are correct', async () => {
         try {
             const mongoOptions = {
-                keepAlive: 300000,
+                keepAlive: true,
                 connectTimeoutMS: 10000,
                 useNewUrlParser: true,
-                useUnifiedTopology: true,
-                useFindAndModify: false,
-                useCreateIndex: true,
-                promiseLibrary: Promise
+                useUnifiedTopology: true
             };
             const result = connect.connectOptions();
             expect(result).toStrictEqual(mongoOptions);
-        } catch (error) {
-            t.fail(error);
-        }
-    });
-
-    test('ensure replica set is set depending on configured envirnment - should see it', async () => {
-        try {
-            const mongoOptions = {
-                keepAlive: 300000,
-                connectTimeoutMS: 10000,
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-                useFindAndModify: false,
-                useCreateIndex: true,
-                promiseLibrary: Promise
-            };
-
-            const copy = {
-                keepAlive: 300000,
-                connectTimeoutMS: 10000,
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-                useFindAndModify: false,
-                useCreateIndex: true,
-                promiseLibrary: Promise,
-                replicaSet: 'rs0'
-            };
-
-            const result = connect.replicaCheck(mongoOptions, 'rs0', `${process.env.NODE_ENV}x`);
-            expect(result).toStrictEqual(copy);
-        } catch (error) {
-            t.fail(error);
-        }
-    });
-
-    test('ensure replica set is set depending on configured envirnment - should not see it', async () => {
-        try {
-            const mongoOptions = {
-                keepAlive: 300000,
-                connectTimeoutMS: 10000,
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-                useFindAndModify: false,
-                useCreateIndex: true,
-                promiseLibrary: Promise
-            };
-
-            const copy = {
-                keepAlive: 300000,
-                connectTimeoutMS: 10000,
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-                useFindAndModify: false,
-                useCreateIndex: true,
-                promiseLibrary: Promise,
-            };
-
-            const result = connect.replicaCheck(mongoOptions, 'rs0', process.env.NODE_ENV);
-            expect(result).toStrictEqual(copy);
         } catch (error) {
             t.fail(error);
         }

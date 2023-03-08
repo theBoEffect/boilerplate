@@ -8,7 +8,6 @@ const config = {
     PROTOCOL: process.env.PROTOCOL || envVars.PROTOCOL || 'http',
     MONGO: process.env.MONGO || envVars.MONGO || 'mongodb://localhost:27017/your-db',
     SWAGGER: process.env.SWAGGER || envVars.SWAGGER || 'localhost:3000',
-    REPLICA: process.env.REPLICA || envVars.REPLICA || 'rs0',
     CORE_EOS_ISSUER: process.env.CORE_EOS_ISSUER || envVars.CORE_EOS_ISSUER,
     CORE_EOS_PLATFORM_ID: process.env.CORE_EOS_PLATFORM_ID || envVars.CORE_EOS_PLATFORM_ID,
     CORE_THIS_SERVICE_CC_AUTHORITY: process.env.CORE_THIS_SERVICE_CC_AUTHORITY || envVars.CORE_THIS_SERVICE_CC_AUTHORITY,
