@@ -1,12 +1,10 @@
-import '@babel/register';
-import "regenerator-runtime/runtime";
 import request from 'supertest';
-import app from '../src/app';
-import swagger from "../src/swagger";
+import app from '../app';
+import swagger from "../swagger";
 import t from './testhelper';
 
-const config = require('../src/config');
-const pJson = require('../package');
+const config = require('../config');
+const pJson = require('../../package');
 
 describe('API tests', () => {
     beforeEach(() => {

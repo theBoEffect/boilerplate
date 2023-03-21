@@ -1,7 +1,5 @@
-import '@babel/register';
-import "regenerator-runtime/runtime";
-import Model from '../src/api/logging/model';
-import log from '../src/api/logging/logs';
+import Model from '../api/logging/model';
+import log from '../api/logging/logs';
 import t from './testhelper';
 
 const mockingoose = require('mockingoose')

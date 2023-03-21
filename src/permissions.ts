@@ -1,4 +1,5 @@
 import Boom from '@hapi/boom';
+import axios from 'axios';
 
 const config = require('./config');
 

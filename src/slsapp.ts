@@ -1,6 +1,7 @@
-const sls = require('serverless-http');
-const app = require('./app').default;
-const connection = require('./connection').default;
+import sls from 'serverless-http'
+import app from './app';
+import connection from "./connection";
+
 const config = require('./config');
 
 let mongoConnect = config.MONGO;
@@ -13,19 +14,10 @@ if (!mongoConnect) {
 if(process.env.NODE_ENV === 'dev') console.info(`Connection string: ${mongoConnect}`);
 connection.create(mongoConnect);
 
-function normalizePort(val) {
+function normalizePort(val: string) {
     const port = parseInt(val, 10);
-
-    if (isNaN(port)) {
-        // named pipe
-        return val;
-    }
-
-    if (port >= 0) {
-        // port number
-        return port;
-    }
-
+    if (isNaN(port)) return val;
+    if (port >= 0) return port;
     return false;
 }
 
@@ -33,11 +25,12 @@ const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 const handler = sls(app, {
-    request: (req, event, context) => {
+    request: (req: any, event: any, context: any) => {
         req.requestId = context.awsRequestId;
     }
 });
-module.exports.handler = async (event, context) => {
+
+module.exports.handler = async (event: any, context: any) => {
     // eslint-disable-next-line no-console
     console.log(`START GATEWAY REQUEST: ${event.requestContext.requestId}`);
     const result = await handler(event, context);

@@ -1,5 +1,3 @@
-import '@babel/register';
-import "regenerator-runtime/runtime";
 import Boom from "@hapi/boom";
 import ref from 'json-schema-ref-parser';
 import merge from 'json-schema-resolve-allof';
@@ -9,11 +7,11 @@ import { OpenApiValidator } from 'express-openapi-validate';
 import t from './testhelper';
 jest.mock('express-openapi-validate');
 
-import swag from '../src/swagger';
-import errorHandler from '../src/customErrorHandler';
-import m from '../src/middleware';
-import helper from '../src/helper';
-import connect from "../src/connection";
+import swag from '../swagger';
+import errorHandler from '../customErrorHandler';
+import m from '../middleware';
+import helper from '../helper';
+import connect from "../connection";
 
 describe('Error handler tests', () => {
     test('make sure error handler returns 404', async () => {

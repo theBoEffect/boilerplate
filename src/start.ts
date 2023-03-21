@@ -1,6 +1,6 @@
-const app = require('./app').default;
+import app from './app';
+import connection from './connection';
 
-const connection = require('./connection').default;
 const config = require('./config');
 
 let mongoConnect = config.MONGO;
@@ -10,14 +10,14 @@ if (!mongoConnect) {
     process.exit(1);
 }
 
-function normalizePort(val) {
+function normalizePort(val: string) {
     const port = parseInt(val, 10);
     if (isNaN(port)) return val;
     if (port >= 0) return port;
     return false;
 }
 
-function onError(error) {
+function onError(error: any) {
     if (error.syscall !== 'listen') throw error;
 
     const bind = typeof port === 'string'
@@ -40,9 +40,12 @@ function onError(error) {
 
 if(process.env.NODE_ENV === 'dev') console.info(`Connection string: ${mongoConnect}`);
 connection.create(mongoConnect);
+
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
+
 const server = app.listen(port, () => {
     console.error(`Listening on ${port}`);
 });
+
 server.on('error', onError);
