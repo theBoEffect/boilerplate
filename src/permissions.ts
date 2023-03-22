@@ -1,19 +1,21 @@
 import Boom from '@hapi/boom';
-import axios from 'axios';
+import { Response, NextFunction } from 'express';
+import { localRequest, localAuthInfo } from "./types";
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 const config = require('./config');
 
 const api = {
-    checkPermission(permissions, check) {
+    checkPermission(permissions: [string], check: string) {
         const og = permissions || [];
-        const find = og.filter(p=>(p.includes(check)));
+        const find = og.filter((p: string) => (p.includes(check)));
         return !!find.length;
     },
-    async enforce(req, res, next) {
+    async enforce(req: localRequest, res: Response, next: NextFunction) {
         try {
             let access = req.authInfo;
             // Let root folks through....
-            if (access?.group === config.CORE_EOS_PLATFORM_ID && access.client_credential !== true) return next();
+            if (access?.group === config.CORE_EOS_PLATFORM_ID && access?.client_credential !== true) return next();
             if(!req.orgContext) throw Boom.forbidden('No context for permissions');
             // check that permission is not a url
             // if x-access-url is present.... (only on jwts...)
@@ -39,8 +41,8 @@ const api = {
             const products = (config.CORE_ASSOCIATED_PRODUCT_ID) ?
                 [config.CORE_ASSOCIATED_PRODUCT_ID] : req.group?.core?.products;
             if(!products?.length) throw Boom.forbidden();
-            const productAccess = access?.['x-access-products']?.[req.orgContext].split(' ').filter((a) => {
-                const found = products.filter((pr) => {
+            const productAccess = access?.['x-access-products']?.[req.orgContext].split(' ').filter((a: string) => {
+                const found = products.filter((pr: string) => {
                     const b = a.split(',');
                     return (pr === b[0]);
                 })
@@ -60,13 +62,13 @@ const api = {
                 return (perm.includes(`${coded}:::`));
             });
             req.allPermissions = permissions;
-            if(!permissions.length) throw Boom.forbidden('You do not have permissions');
+            if(!permissions?.length) throw Boom.forbidden('You do not have permissions');
             req.userPermissions = await mapper(req, coded, permissions);
             req.enforceOwner = false;
-            const owner = req.userPermissions.filter((p) => {
+            const owner = req.userPermissions?.filter((p) => {
                 return (p.includes(':own'));
             });
-            if(owner.length === req.userPermissions.length) req.enforceOwner = true;
+            if(owner?.length === req.userPermissions?.length) req.enforceOwner = true;
             return next();
         } catch (error) {
             console.info(error)
@@ -75,14 +77,14 @@ const api = {
     }
 };
 
-function getTarget (path) {
+function getTarget (path: string) {
     let target;
     // define your resource targets here. log included as an example but not required.
     if(path.includes('/log')) target = 'log';
     return target;
 }
 
-function getAction (target, method) {
+function getAction (target: string, method: string) {
     switch (method?.toLowerCase()) {
         case 'get':
             return 'read';
@@ -98,8 +100,8 @@ function getAction (target, method) {
             return undefined;
     }
 }
-async function mapper(req, product, permissions) {
-    const target = getTarget(req.path);
+async function mapper(req: localRequest, product: string, permissions: string[]) {
+    const target = getTarget(req.path)!;
     const action = getAction(target, req.method);
     const perms = permissions.filter((p) => {
         return (p.includes(`${product}:::${target}::${action}`))
@@ -108,7 +110,7 @@ async function mapper(req, product, permissions) {
     return perms;
 }
 
-async function getPermissions(accessUrl, token) {
+async function getPermissions(accessUrl: string, token?: string) {
     try {
         let url = accessUrl;
         if(url.includes('?')) {
@@ -116,21 +118,22 @@ async function getPermissions(accessUrl, token) {
         } else {
             url = `${url}?minimized=true`;
         }
-        const options = {
+        const options: AxiosRequestConfig = {
             url,
             method: 'get',
             headers: {
                 authorization: `bearer ${token}`
             }
         };
-        const result = await axios(options);
+        const result: AxiosResponse = await axios(options);
         if(!result?.data?.data) throw new Error('Could not get permissions from access url');
-        return {
+        const output: localAuthInfo = {
             'x-access-products': result.data.data?.products,
             'x-access-permissions': result.data.data?.permissions,
             'x-access-roles': result.data.data?.roles,
             'x-access-domains': result.data.data?.domains
-        }
+        };
+        return output;
     } catch (error) {
         console.info(error);
         throw Boom.forbidden('Unable to extract permissions for this user');
