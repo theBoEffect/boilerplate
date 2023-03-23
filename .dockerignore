@@ -1,4 +1,4 @@
 .idea/
 public/bower_components/
-config.js
+config.ts
 node_modules/

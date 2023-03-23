@@ -1,16 +1,14 @@
-import mongoose from 'mongoose';
+import mongoose, { ConnectOptions } from 'mongoose';
 
 let i = 0;
 const connect = {
-    connectOptions() {
+    connectOptions(): ConnectOptions {
         return {
             keepAlive: true,
-            connectTimeoutMS: 10000,
-            useNewUrlParser: true,
-            useUnifiedTopology: true
+            connectTimeoutMS: 10000
         };
     },
-    async create(mongoConnect) {
+    async create(mongoConnect: string): Promise<any> {
         try {
             mongoose.set('strictQuery', true);
             let mongoOptions = this.connectOptions();

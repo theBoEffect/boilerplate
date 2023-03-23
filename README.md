@@ -51,9 +51,9 @@ http://jsonpatch.com/
 
 If you'd rather use a different database or ODM, the following modifications are necessary:
 
-* change connection.js to the appropriate DB
-* validate that slsapp and start both correctly implement connection.js
-* in each of your api/resources, change the dal.js file to access the new DB using the new ODM/ORM
+* change connection.ts to the appropriate DB
+* validate that slsapp and start both correctly implement connection.ts
+* in each of your api/resources, change the dal.ts file to access the new DB using the new ODM/ORM
 
 ## Quickstart Run
 

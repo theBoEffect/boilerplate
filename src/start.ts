@@ -1,7 +1,6 @@
 import app from './app';
 import connection from './connection';
-
-const config = require('./config');
+import { config } from './config';
 
 let mongoConnect = config.MONGO;
 
@@ -10,14 +9,14 @@ if (!mongoConnect) {
     process.exit(1);
 }
 
-function normalizePort(val: string) {
+function normalizePort(val: string): any {
     const port = parseInt(val, 10);
     if (isNaN(port)) return val;
     if (port >= 0) return port;
     return false;
 }
 
-function onError(error: any) {
+function onError(error: any): void {
     if (error.syscall !== 'listen') throw error;
 
     const bind = typeof port === 'string'

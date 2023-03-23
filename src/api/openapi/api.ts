@@ -1,9 +1,10 @@
+import { Request, Response, NextFunction} from "express";
 import swagger from '../../swagger';
 import modify from './swag';
 const pJson = require('../../../package.json');
 
 export default {
-    async serveVersion(req, res, next) {
+    async serveVersion(req: Request, res: Response, next: NextFunction) {
         try {
             const date = new Date();
             return res.render('index', {
@@ -19,14 +20,14 @@ export default {
             next(e)
         }
     },
-    async serveSwaggerUI(req, res, next) {
+    async serveSwaggerUI(req: Request, res: Response, next: NextFunction) {
         try {
             return res.render('swagger', { title: pJson.name })
         } catch (e) {
             next(e);
         }
     },
-    async serveApiJson(req, res) {
+    async serveApiJson(req: Request, res: Response) {
         try{
             let swag = JSON.parse(JSON.stringify(swagger));
             swag = modify.updateSwag(swag);
@@ -36,14 +37,14 @@ export default {
             return res.json(swagger);
         }
     },
-    async reDocApi(req, res, next) {
+    async reDocApi(req: Request, res: Response, next: NextFunction) {
         try {
             return res.render('api', { title: pJson.name })
         } catch (e) {
             next(e);
         }
     },
-    async oauth2Redirect(req, res, next) {
+    async oauth2Redirect(req: Request, res: Response, next: NextFunction) {
         try {
             return res.render('openapi-redirect');
         } catch (e) {

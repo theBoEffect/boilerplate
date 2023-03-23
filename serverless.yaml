@@ -20,7 +20,7 @@ provider:
   lambdaHashingVersion: 20201221
   environment:
     NODE_ENV: ${env:NODE_ENV, file(./.env/env.${self:custom.local_env}.json):NODE_ENV}
-    SWAGGER: ${env:SWAGGER, file(./.env/env.${self:custom.local_env}.json):SWAGGER}
+    HOST: ${env:SWAGGER, file(./.env/env.${self:custom.local_env}.json):HOST}
     PROTOCOL: ${env:PROTOCOL, file(./.env/env.${self:custom.local_env}.json):PROTOCOL}
     MONGO: ${env:MONGO, file(./.env/env.${self:custom.local_env}.json):MONGO}
     CORE_EOS_ISSUER: ${env:CORE_EOS_ISSUER, file(./.env/env.${self:custom.local_env}.json):CORE_EOS_ISSUER}

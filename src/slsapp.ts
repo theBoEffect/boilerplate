@@ -1,8 +1,7 @@
 import sls from 'serverless-http'
 import app from './app';
 import connection from "./connection";
-
-const config = require('./config');
+import { config } from './config';
 
 let mongoConnect = config.MONGO;
 
@@ -14,7 +13,7 @@ if (!mongoConnect) {
 if(process.env.NODE_ENV === 'dev') console.info(`Connection string: ${mongoConnect}`);
 connection.create(mongoConnect);
 
-function normalizePort(val: string) {
+function normalizePort(val: string): any {
     const port = parseInt(val, 10);
     if (isNaN(port)) return val;
     if (port >= 0) return port;
@@ -30,7 +29,7 @@ const handler = sls(app, {
     }
 });
 
-module.exports.handler = async (event: any, context: any) => {
+module.exports.handler = async (event: any, context: any): Promise<any> => {
     // eslint-disable-next-line no-console
     console.log(`START GATEWAY REQUEST: ${event.requestContext.requestId}`);
     const result = await handler(event, context);

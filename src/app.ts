@@ -1,13 +1,12 @@
-import express from 'express';
+import express, { Express } from 'express';
 import path from 'path';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
-
-import { Root, Api } from './routes';
 import middle from './middleware';
+import { Root, Logs } from './routes';
+import { config } from './config';
 
-const config = require('./config');
-const app = express();
+const app: Express = express();
 
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'pug');
@@ -23,9 +22,8 @@ app.use(middle.cores);
 
 //content and APIs
 app.use(express.static(path.join(__dirname, '../public')));
-//app.use('/swagger', express.static(path.join(__dirname, '../public/swagger')));
 app.use('/', Root);
-app.use('/api', Api);
+app.use('/api', Logs);
 
 // catch 404 and other errors
 app.use(middle.catch404);

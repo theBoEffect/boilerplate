@@ -1,2 +1,2 @@
-export { default as say } from './say.js';
-export { default as sayMiddleware } from './sayMiddleware';
+export { default as say } from './say.ts';
+export { responseIntercept } from './sayMiddleware';

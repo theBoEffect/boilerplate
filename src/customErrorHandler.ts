@@ -1,12 +1,12 @@
-import Boom from '@hapi/boom';
-import log from './api/logging/logs';
-const config = require('./config');
+import Boom, { Boom as IB, Payload } from '@hapi/boom';
+import { IErrors, IPayload } from './types';
+import {v4 as uuid} from "uuid";
 
 export default {
-    catch404() {
+    catch404(): IB {
         return Boom.notFound('Resource not found');
     },
-    async parse(error, id=undefined) {
+    async parse(error: any, id: string | undefined = undefined): Promise<IErrors | Payload> {
         try {
             if(error.code === 11000) {
                 const conflict = Boom.conflict(
@@ -16,7 +16,7 @@ export default {
             }
             const tE = await doParse(error);
             const err = tE.output.payload;
-            if(id) tE.output.payload['_id'] = id;
+            if(id) tE.output.payload['id'] = <string>id;
             return logger(err, tE);
         } catch (error) {
             const result = await doParse(error);
@@ -27,7 +27,7 @@ export default {
     }
 }
 
-async function doParse(error) {
+async function doParse(error: any) {
     let tE = error;
     if (!Boom.isBoom(error)) tE = Boom.boomify(error);
     // openApi adjustment
@@ -44,16 +44,26 @@ async function doParse(error) {
     return tE;
 }
 
-async function logger (err, tE) {
+async function logger (err: IErrors, tE: IB): Promise<IErrors> {
     try {
-        const nE = await log.record(tE.output.payload, config.PERSIST_HTTP_ERRORS);
-        err.id = nE._id || nE.id;
-        if(nE.persisted === false) err.persisted = false;
+        const nE = await setupError(tE.output.payload);
+        err.id = nE.id;
         return err;
     } catch (error) {
         const result = await doParse(error);
         console.error(result);
         return result.output.payload;
     }
+}
 
+async function setupError(data: any): Promise<IErrors> {
+    const error: IErrors = {
+        id: data?.id || uuid(),
+        thrown: Date.now(),
+        message: (data?.message) ? data?.message : 'unknown error',
+    }
+    if(data?.id) delete data?.id;
+    data.thrown = error.thrown;
+    error.details = data;
+    return error;
 }

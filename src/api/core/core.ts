@@ -1,14 +1,15 @@
 import axios from 'axios';
 import qs from 'querystring';
-import cache from '../core/coreCache';
+import cache from './coreCache';
 import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from "express";
 import { v4 as uuid } from 'uuid';
 import Boom from "@hapi/boom";
 const config = require('../../config');
 const CLIENT_ASSERTION_TYPE = 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer';
 
 // creates a client secret jwt for secure m2m client authorization
-async function getSecretJwt(aud, minutes = 1) {
+async function getSecretJwt(aud: string | string[], minutes: number = 1): Promise<string> {
 	const clientSecret = config.CORE_THIS_SERVICE_CLIENT_SECRET;
 	const clientId = config.CORE_THIS_SERVICE_CLIENT_ID;
 
@@ -25,10 +26,10 @@ async function getSecretJwt(aud, minutes = 1) {
 }
 
 const capi = {
-	async getOrgContext(req, res, next) {
+	async getOrgContext(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			if(req.headers?.['x-org-context']) {
-				req.orgContext = req.headers['x-org-context'];
+				req.orgContext = <string>req.headers['x-org-context'];
 				return next();
 			}
 			if(req.group?.core?.org?.id) {
@@ -41,7 +42,7 @@ const capi = {
 			next(error);
 		}
 	},
-	async validateAG(req, res, next) {
+	async validateAG(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			if(!req.group) {
 				let group;
@@ -58,14 +59,14 @@ const capi = {
 				if(!result?.data?.data) throw Boom.notFound(`Unknown platform id: ${group}`);
 				req.group = result.data.data;
 			}
-			req.authGroup = req.group.groupId;
-			req.OP = req.group.preferredOP;
+			req.authGroup = req.group?.groupId;
+			req.OP = req.group?.preferredOP;
 			return next();
 		} catch(error) {
 			next(error);
 		}
 	},
-	async getServiceCC(audience, refresh = false) {
+	async getServiceCC(audience: string, refresh: boolean = false): Promise<string|undefined> {
 		try {
 			const authGroup = config.CORE_THIS_SERVICE_CC_AUTHORITY;
 			let token = (refresh === false) ? await cache.getToken((audience) ? audience : authGroup) : undefined;
@@ -88,10 +89,10 @@ const capi = {
 				};
 				const data = await axios(options);
 				token = data?.data?.access_token;
-				await cache.cacheToken((audience) ? audience : authGroup, token);
+				await cache.cacheToken((audience) ? audience : authGroup, <string>token);
 			}
 			return token;
-		} catch (error) {
+		} catch (error: any) {
 			if(error.isAxiosError) console.error(error?.response?.data);
 			else console.error(error);
 			return undefined;

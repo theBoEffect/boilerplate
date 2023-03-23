@@ -1,17 +1,16 @@
 import Boom from '@hapi/boom';
-import { Response, NextFunction } from 'express';
-import { localRequest, localAuthInfo } from "./types";
+import { NextFunction, Request, Response } from 'express';
+import { IAuthInfo } from "./types";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-
-const config = require('./config');
+import { config } from './config';
 
 const api = {
-    checkPermission(permissions: [string], check: string) {
+    checkPermission(permissions: [string], check: string): boolean {
         const og = permissions || [];
         const find = og.filter((p: string) => (p.includes(check)));
         return !!find.length;
     },
-    async enforce(req: localRequest, res: Response, next: NextFunction) {
+    async enforce(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
             let access = req.authInfo;
             // Let root folks through....
@@ -77,14 +76,14 @@ const api = {
     }
 };
 
-function getTarget (path: string) {
+function getTarget (path: string): string | undefined {
     let target;
     // define your resource targets here. log included as an example but not required.
     if(path.includes('/log')) target = 'log';
     return target;
 }
 
-function getAction (target: string, method: string) {
+function getAction (method: string): string | undefined {
     switch (method?.toLowerCase()) {
         case 'get':
             return 'read';
@@ -100,9 +99,9 @@ function getAction (target: string, method: string) {
             return undefined;
     }
 }
-async function mapper(req: localRequest, product: string, permissions: string[]) {
+async function mapper(req: Request, product: string, permissions: string[]): Promise<Array<string>>{
     const target = getTarget(req.path)!;
-    const action = getAction(target, req.method);
+    const action = getAction(req.method);
     const perms = permissions.filter((p) => {
         return (p.includes(`${product}:::${target}::${action}`))
     })
@@ -110,7 +109,7 @@ async function mapper(req: localRequest, product: string, permissions: string[])
     return perms;
 }
 
-async function getPermissions(accessUrl: string, token?: string) {
+async function getPermissions(accessUrl: string, token?: string): Promise<IAuthInfo> {
     try {
         let url = accessUrl;
         if(url.includes('?')) {
@@ -127,13 +126,12 @@ async function getPermissions(accessUrl: string, token?: string) {
         };
         const result: AxiosResponse = await axios(options);
         if(!result?.data?.data) throw new Error('Could not get permissions from access url');
-        const output: localAuthInfo = {
+        return {
             'x-access-products': result.data.data?.products,
             'x-access-permissions': result.data.data?.permissions,
             'x-access-roles': result.data.data?.roles,
             'x-access-domains': result.data.data?.domains
         };
-        return output;
     } catch (error) {
         console.info(error);
         throw Boom.forbidden('Unable to extract permissions for this user');

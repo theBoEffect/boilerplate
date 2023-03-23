@@ -1,10 +1,7 @@
 import express from 'express';
-import log from '../api/logging/api';
-import m from '../middleware';
+import log from './api';
+import m from '../../middleware';
 const router = express.Router();
-
-router.get('/version', m.version);
-router.get('/health', m.health);
 
 // simple non-auth endpoints
 router.get('/logs', log.getLogs);
@@ -17,8 +14,8 @@ router.get('/logs/:id', [
 // example using middleware to authenticate and authorize against your Core EOS Platform instance
 router.post('/logs', [
     m.schemaCheck,
-    m.isAuthenticated,
-    m.enforce
+    //m.isAuthenticated,
+    //m.enforce
 ], log.writeLog);
 
 // example like above but now this can authenticate and authorize against any Core EOS Platform - not generally recommended
@@ -30,4 +27,4 @@ router.patch('/:group/logs/:id', [
     m.enforce
 ], log.patchLog);
 
-module.exports = router;
+export default router;

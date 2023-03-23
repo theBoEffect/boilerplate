@@ -4,8 +4,10 @@
  */
 import jwt from 'jsonwebtoken';
 import qs from 'querystring';
-import jkwsClient from 'jwks-rsa';
-import axios from 'axios';
+import jkwsClient, { SigningKey } from 'jwks-rsa';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { Core, DoneFunction } from '../../types';
+import { Request } from 'express';
 import Boom from '@hapi/boom';
 import cache from './coreCache';
 
@@ -14,32 +16,32 @@ const AUDIENCE = `${config.PROTOCOL}://${config.SWAGGER}`;
 
 const jwtCheck = /^([A-Za-z0-9\-_~+\/]+[=]{0,2})\.([A-Za-z0-9\-_~+\/]+[=]{0,2})(?:\.([A-Za-z0-9\-_~+\/]+[=]{0,2}))?$/;
 
-function isJWT(str) {
+function isJWT(str: string): boolean {
 	return jwtCheck.test(str);
 }
 
-async function getUser(token, issuer) {
+async function getUser(token: string, issuer: string) {
 	const user = await cache.getUser(token);
 	if(user) return user;
 	const url = `${issuer}/me`;
-	const options = {
+	const options: AxiosRequestConfig = {
 		url,
 		method: 'get',
 		headers: {
 			authorization: `bearer ${token}`
 		}
 	};
-	const result = await axios(options);
+	const result: AxiosResponse = await axios(options);
 	if(result?.data){
 		await cache.cacheUser(token, result.data);
 	}
 	return result.data;
 }
 
-async function getAGInfo(authGroup, token) {
+async function getAGInfo(authGroup: string, token?: string) {
 	const info = await cache.getGroupInfo(authGroup);
 	if(info) return info;
-	const options = {
+	const options: AxiosRequestConfig = {
 		url: `${config.CORE_EOS_ISSUER}/api/group-info/${authGroup}`,
 		method: 'get'
 	};
@@ -48,7 +50,7 @@ async function getAGInfo(authGroup, token) {
 			authorization: `bearer ${token}`
 		};
 	}
-	const result = await axios(options);
+	const result: AxiosResponse = await axios(options);
 	if(!result?.data?.data) throw Boom.unauthorized();
 	if(result?.data?.data?.core) {
 		await cache.cacheGroupInfo(authGroup, result.data.data);
@@ -56,14 +58,14 @@ async function getAGInfo(authGroup, token) {
 	return result.data.data;
 }
 
-async function introspect(token, issuer, client_id) {
-	const intro = await cache.getIntrospection(token);
+async function introspect(token: string, issuer: string, client_id: string) {
+	const intro: Core.Decoded = <Core.Decoded>await cache.getIntrospection(token);
 	if(intro) {
-		if (intro?.exp > Date.now() / 10000) return intro;
+		if (<number>intro?.exp > Date.now() / 10000) return intro;
 		else await cache.clearIntrospection(token);
 	}
 	const introspection = `${issuer}/token/introspection`;
-	const options = {
+	const options: AxiosRequestConfig = {
 		url: introspection,
 		method: 'post',
 		data: qs.stringify({
@@ -72,14 +74,14 @@ async function introspect(token, issuer, client_id) {
 			'token-hint': 'access_token',
 		})
 	};
-	const result = await axios(options);
+	const result: AxiosResponse = await axios(options);
 	if(result?.data) {
 		await cache.cacheIntrospection(token, result.data);
 	}
 	return result.data;
 }
 
-async function runDecodedChecks(token, issuer, decoded, authGroup, clientId, requireAud = false) {
+async function runDecodedChecks(token: string, issuer: string, decoded: Core.Decoded, authGroup: string, clientId: string, requireAud: boolean = false): Promise<Core.CheckDecoded | Core.Decoded> {
 	// first validate correct UE Core ISS domain
 	const issHost = issuer.replace('http://', '').replace('https://','').split('/');
 	if(issHost[0] !== config.CORE_EOS_ISSUER.replace('https://','')) {
@@ -148,20 +150,21 @@ async function runDecodedChecks(token, issuer, decoded, authGroup, clientId, req
 	return decoded;
 }
 
-function oidcValidate (CC = false, platformOverride = false) {
-	return async function (req, token, next) {
+function oidcValidate (CC = false, platformOverride = false): any {
+	return async function (req: Request, token: string, next: DoneFunction): Promise<any> {
 		try {
 			let authGroup, clientId, issuer, agData;
 			if (isJWT(token)) {
-				const preDecoded = jwt.decode(token, {complete: true});
+				const preDecoded: any = jwt.decode(token, {complete: true});
 				if (!preDecoded?.payload?.group) return next(null, false);
 				if (!preDecoded?.payload?.iss) return next(null, false);
-				authGroup = req.params.group || preDecoded?.payload?.group;
-				issuer = preDecoded?.payload?.iss;
-				if (CC === true) {
+				const payload: Core.Decoded = preDecoded.payload;
+				authGroup = req.params.group || payload?.group;
+				issuer = payload?.iss;
+				if (CC) {
 					agData = await getAGInfo(authGroup);
 					clientId = config.CORE_THIS_SERVICE_CLIENT_ID;
-				} else if (platformOverride === true){
+				} else if (platformOverride){
 					agData = await getAGInfo(config.CORE_EOS_PLATFORM_ID, token);
 					clientId = agData?.id;
 				} else {
@@ -180,10 +183,10 @@ function oidcValidate (CC = false, platformOverride = false) {
 					jwksUri: `${issuer}/jwks`
 				});
 
-				const key = await client.getSigningKey(preDecoded.header.kid);
-				const signingKey = key.getPublicKey || key.rsaPublicKey;
+				const key: SigningKey = await client.getSigningKey(preDecoded.header.kid);
+				const signingKey = key.getPublicKey;
 
-				const decoded = await jwt.verify(token, signingKey());
+				const decoded: any = await jwt.verify(token, signingKey());
 				if (decoded) {
 					const result = await runDecodedChecks(token, issuer, decoded, authGroup, clientId, CC);
 					return next(null, result, {token, ...decoded});
@@ -224,11 +227,9 @@ function oidcValidate (CC = false, platformOverride = false) {
 				return next(null, result, {token, ...inspect});
 			}
 			return next(null, false);
-		} catch (error) {
+		} catch (error: any) {
 			if (error.isAxiosError) {
 				console.info('UNAUTHORIZED VIA API CORE - IF YOU HAVE CHAINED AUTHENTICATION, THIS MAY NOT MATTER');
-				//console.info(error?.response?.status);
-				//console.error(error?.response?.data);
 			}
 			else console.error(error);
 			return next(null, false);

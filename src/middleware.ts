@@ -1,13 +1,15 @@
 import { OpenApiValidator } from 'express-openapi-validate';
+import { NextFunction, ErrorRequestHandler, Request, Response } from 'express';
 import Boom from '@hapi/boom';
 import { v4 as uuid } from 'uuid';
 import handleErrors from './customErrorHandler';
-import { sayMiddleware } from './say';
+import { responseIntercept } from './say';
 import swag from './swagger';
 import mongoose from "mongoose";
 import auth from './auth/auth';
 import core from './api/core/core';
 import permissions from './permissions';
+import {Operation} from "express-openapi-validate/dist/OpenApiDocument";
 
 const p = require('../package.json');
 
@@ -15,20 +17,20 @@ const date = new Date();
 const schema = new OpenApiValidator(swag, { ajvOptions: { formats: { email: true, password: true, uri: true, url: true, uuid: true } } });
 
 export default {
-    cores (req, res, next) {
+    cores (req: Request, res: Response, next: NextFunction): any {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Methods', 'GET, HEAD, POST, DELETE, PUT, PATCH, OPTIONS');
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, api_key, Authorization');
         next();
     },
-    catch404 (req, res, next) {
+    catch404 (req: Request, res: Response, next: NextFunction): any {
         try {
             next(handleErrors.catch404());
         } catch (error) {
             next(error);
         }
     },
-    async requestId(req, res, next) {
+    async requestId(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
             if(req.requestId) return next();
             // try mapping from gateway if the request is missing...
@@ -43,25 +45,24 @@ export default {
             next(error);
         }
     },
-    async catchErrors (err, req, res, next) {
+    async catchErrors (err: ErrorRequestHandler, req: Request, res: Response, next: NextFunction): Promise<object> {
         try {
             const error = await handleErrors.parse(err, req.requestId);
             return res.respond(error);
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
             return res.status(500).json({ error: 'Unexpected Error - See Logs', message: error.message || error });
         }
     },
-    responseIntercept: sayMiddleware.responseIntercept,
-    async health (req, res) {
-        return res.json(
-            {
+    responseIntercept: responseIntercept,
+    async health (req: Request, res: Response): Promise<object> {
+        return res.json({
                 server: 'running',
                 db: mongoose.STATES[mongoose.connection.readyState]
             }
         );
     },
-    async version (req, res) {
+    async version (req: Request, res: Response): Promise<object> {
         return res.json( {
             data: {
                 api: p.name,
@@ -70,14 +71,14 @@ export default {
             }
         });
     },
-    async schemaCheck(req, res, next) {
+    async schemaCheck(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
             let path  = `${req.route.path}`;
             await Promise.all(Object.keys(req.params).map((p)=>{
                 path = path.replace(`:${p}`, `{${p}}`);
             }));
-            return schema.validate(req.method.toString().toLowerCase(), path.toLowerCase())(req, res, next);
-        } catch (error) {
+            return schema.validate(<Operation>req.method.toString().toLowerCase(), path.toLowerCase())(req, res, next);
+        } catch (error: any) {
             next(Boom.expectationFailed(error.message || 'Something unexpected went wrong validating OpenAPI Schema'));
         }
     },
