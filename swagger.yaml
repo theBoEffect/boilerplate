@@ -22,7 +22,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/oneLog'
+                properties:
+                  type:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Log'
         '405':
           description: Invalid input
         '500':
@@ -31,7 +35,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/writeLog'
+              properties:
+                type:
+                  type: string
+                  default: Log
+                data:
+                  $ref: '#/components/schemas/writeLog'
         description: Log data to be written
         required: true
     get:
@@ -77,7 +86,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Logs'
+                properties:
+                  type:
+                    type: string
+                    default: Log
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Log'
   '/logs/{id}':
     get:
       tags:
@@ -98,7 +114,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/oneLog'
+                properties:
+                  type:
+                    type: string
+                    default: log
+                  data:
+                    $ref: '#/components/schemas/Log'
         '400':
           description: Invalid code supplied
         '404':
@@ -117,12 +138,17 @@ paths:
           schema:
             type: string
       responses:
-        '201':
+        '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/oneLog'
+                properties:
+                  type:
+                    type: string
+                    default: Log
+                  data:
+                    $ref: '#/components/schemas/Log'
         '405':
           description: Invalid input
         '500':
@@ -202,48 +228,6 @@ components:
         message:
           type: string
           description: additional information about the error
-    Log:
-      type: object
-      properties:
-        id:
-          type: string
-          description: guid for this log
-        logTimestamp:
-          type: string
-          format: date-time
-          description: This is your rangeKey. This is a timestamp.
-      allOf:
-        - $ref: '#/components/schemas/writeLog'
-    writeLog:
-      type: object
-      required:
-        - message
-      properties:
-        code:
-          type: string
-          enum: ["ERROR", "SUCCESS", "NOTIFY", "LOG"]
-        message:
-          type: string
-          description: This should be any brief summary data in string format.
-        details:
-          type: object
-          description: You can directly pipe any error message objects to here.
-    oneLog:
-      properties:
-        type:
-          type: string
-          default: Log
-        data:
-          $ref: '#/components/schemas/Log'
-    Logs:
-      properties:
-        type:
-          type: string
-          default: Log
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Log'
 
     jsonPatch:
       additionalProperties: false

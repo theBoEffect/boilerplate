@@ -2,7 +2,7 @@ import { Schema, model, Document } from 'mongoose';
 import { v4 as uuid } from 'uuid';
 
 const logSchema = new Schema<any>({
-    created: {
+    thrown: {
         type: Date,
         default: Date.now,
         expires: '30d'
