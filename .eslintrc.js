@@ -1,12 +1,13 @@
 module.exports = {
     "env": {
         "es6": true,
+        "typescript": true,
         "node": true,
         "jest": true
     },
     "plugins": ["jest"],
     "extends": "eslint:recommended",
-    "parser": "babel-eslint",
+    "parser": "typescript-eslint",
     "parserOptions": {
         "sourceType": "module"
     },

@@ -1,6 +1,6 @@
 # Boilerplate Service
 
-A boilerplate micro service that runs as docker or lambda. Click "Use this Template" to use this for your service.
+A boilerplate typescript micro service that runs as docker or lambda. Click "Use this Template" to use this for your service.
 
 [![CI](https://github.com/theBoEffect/boilerplate/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/theBoEffect/boilerplate/actions/workflows/main.yml)
 
@@ -11,6 +11,7 @@ A boilerplate micro service that runs as docker or lambda. Click "Use this Templ
 
 ## Key Stack Components
 
+* TypeScript
 * Express
 * Mongoose -> MongoDB
 * Serverless-http
@@ -19,21 +20,20 @@ A boilerplate micro service that runs as docker or lambda. Click "Use this Templ
 * @hapi/boom
 * oData API query
 * JSON Patch
-* Babel (see libs in package.json)
 * Passport (see libs in package.json)
 * Jest
 
 ## Features
 
-* Authentication and Authorization via Core EOS (unitedeffects.com)
-* Configurable MongoDB connection to stand-alone or replica (or atlas)
+* Authentication and Authorization via [UE Auth](https://ueauth.com)
+* Configurable MongoDB connection
 * oData support for queries
 * JSON Patch implemented for updates with mongodb
 * OpenAPI (swagger) and Swagger UI (/swagger)
 * Automatic API Documentation Generated via ReDoc (/api)
 * Automatic schema validation using the OpenAPI spec built in as middleware
+* Automatic Type definitions using OpenAPI spec (yarn swag-spec SWAGGER-OBJEC TYPE-NAME)
 * Error handling via @hapi/Boom
-* Configurable logging with optional DB persistence
 * Works with Docker or Lambda
 * Jest test harness
 
@@ -51,9 +51,9 @@ http://jsonpatch.com/
 
 If you'd rather use a different database or ODM, the following modifications are necessary:
 
-* change connection.js to the appropriate DB
-* validate that slsapp and start both correctly implement connection.js
-* in each of your api/resources, change the dal.js file to access the new DB using the new ODM/ORM
+* change connection.ts to the appropriate DB
+* validate that slsapp and start both correctly implement connection.ts
+* in each of your api/resources, change the dal.ts file to access the new DB using the new ODM/ORM
 
 ## Quickstart Run
 
@@ -63,9 +63,8 @@ If you'd rather use a different database or ODM, the following modifications are
     * I find the easiest way to do this is via docker in a terminal
     * docker run -p 27017:27017 mongo
 * Copy ./.env_ci to ./.env and modify env.dev.json to set runtime configuration data
-* yarn
-* yarn test
-* yarn run dev
+* yarn test (will run yarn and build)
+* yarn dev
 * navigate to localhost:3000
 
 ### Configure For Your Service
@@ -78,6 +77,4 @@ If you'd rather use a different database or ODM, the following modifications are
     * homepage (your website or project website)
     * logo (your logo or project logo url)
 * Do the above quickstart now...
-* add src/api resources using the logging example
-    * You will also want to update the ci/codefresh.yaml file to point to your repo
-    * Note that my CI only tests, there is no deploy stage, you'll need to add it
+* Add src/api resources using the [logging example](./src/api/logging)

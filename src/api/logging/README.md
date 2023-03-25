@@ -1,21 +1,17 @@
-# Logging
+# Example API Setup
 
-This resource shows an example of how an API, logic and Data access should be configured in this service. In this case the resource is logging. This is fact that there is a data access layer and API for logging here is primarily for show and you can disable the DB writes from the config "WRITE_LOGS_TO_DB": false" option. Of course, you can set it to true as well and it will record all log interactions in the DB for query via API.
+You can use this logging directory as an example of how to approach each API resource you want to define. This directory itself is not required for the continued use of the template.
 
-## Tip
+## General Instructions
 
-This resource has full CRUD implemented with the details listed below. Feel free to copy paste it to use a template for the next resource in your api.
-
-## Implementation Details
-
-* Separate API, Logic, DAL and Model files
-* oData for queries
-* JSON Patch for updating (not really something you would do in a log system but again, an example)
-
-## Log Definition
-
-Each log object has a unique GUID (uuidv4) for reference and is written to the console for collection by an appropriate listener. When peristed, these can be referenced via the API as well.
-
-## Non-Persistent Use
-
-Even if you set "WRITE_LOGS_TO_DB": false, do not delete this resource as it is and can be used for generally logging with most platforms.
+1. cp logging newApi
+2. define a new data/schema to account for the objects you wish to include in the openAPI spec and which you want to create types from
+3. add a reference to this new schema (newApi/data/schema) in the ./swagger.ts openApi generator class (line 27+)
+4. make note of your schema objects that require type definitions and use those names in the next step to auto generate your types form the schema
+5. yarn swag-type SCHEMA-NAME TYPE-NAME
+    * As an example, to generate the type example you see now, we would use "yarn swag-type Log LogObject"
+6. update your data/model definition to match your type
+7. change your api, logic, and dal files to handle your crud operations
+8. add your routes
+9. update ./routes/index to include your routes
+10. update ./app to include your routes (line 6 and line 26+)
