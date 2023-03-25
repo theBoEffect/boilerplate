@@ -25,7 +25,7 @@ A boilerplate typescript micro service that runs as docker or lambda. Click "Use
 
 ## Features
 
-* Authentication and Authorization via (UE Auth)[https://ueauth.com]
+* Authentication and Authorization via [UE Auth](https://ueauth.com)
 * Configurable MongoDB connection
 * oData support for queries
 * JSON Patch implemented for updates with mongodb
@@ -77,4 +77,4 @@ If you'd rather use a different database or ODM, the following modifications are
     * homepage (your website or project website)
     * logo (your logo or project logo url)
 * Do the above quickstart now...
-* Add src/api resources using the (logging example)[./src/api/logging]
+* Add src/api resources using the [logging example](./src/api/logging)
