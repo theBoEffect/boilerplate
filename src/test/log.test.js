@@ -6,7 +6,7 @@ const mockingoose = require('mockingoose')
 
 
 const oneLog = {
-    "logTimestamp": "2020-03-23T02:11:49.000Z",
+    "thrown": "1970-01-15T06:56:07.890Z",
     "code": "ERROR",
     "message": "TEST",
     "details": {
@@ -17,7 +17,7 @@ const oneLog = {
 
 const multiLogs = [
     {
-        "logTimestamp": "2020-03-23T02:11:49.000Z",
+        "thrown": "1970-01-15T06:56:07.890Z",
         "code": "ERROR",
         "message": "TEST",
         "details": {
@@ -26,7 +26,7 @@ const multiLogs = [
         "_id": "4dd31c2c-be8b-4f96-8d30-40ce1b0a42fb"
     },
     {
-        "logTimestamp": "2020-03-23T02:12:49.000Z",
+        "thrown": "1970-01-15T06:56:07.890Z",
         "code": "NOTIFY",
         "message": "TEST 2",
         "details": {
@@ -43,7 +43,7 @@ describe('Log DAL tests', () => {
         Model.Query.prototype.findOne.mockClear();
     });
 
-    it('write a log with persist true', async () => {
+    it('write a log', async () => {
         try {
             const expected = JSON.parse(JSON.stringify(oneLog));
             expected.id = expected._id;
@@ -56,36 +56,11 @@ describe('Log DAL tests', () => {
                     "test": "test"
                 }
             };
-            const result = await log.writeLog(data, true);
+            const result = await log.writeLog(data);
+            console.info(result);
             expect(Model.prototype.save).toHaveBeenCalled();
             const res = JSON.parse(JSON.stringify(result));
             expect(res).toMatchObject(expected);
-            expect(res.persisted).toBe(true);
-        } catch (error) {
-            t.fail(error);
-        }
-
-    });
-
-    it('write a log with persist false', async () => {
-        try {
-            const expected = JSON.parse(JSON.stringify(oneLog));
-            expected.id = expected._id;
-            delete expected._id;
-            mockingoose(Model).toReturn(oneLog, 'save');
-            const data = {
-                "code": "ERROR",
-                "message": "TEST",
-                "details": {
-                    "test": "test"
-                }
-            };
-            const result = await log.writeLog(data, false);
-            expect(Model.prototype.save).not.toHaveBeenCalled();
-            const res = JSON.parse(JSON.stringify(result));
-            expect(res.code).toBe(expected.code);
-            expect(res.message).toBe(expected.message);
-            expect(res.details).toStrictEqual(expected.details);
         } catch (error) {
             t.fail(error);
         }
@@ -129,7 +104,6 @@ describe('Log DAL tests', () => {
         try {
             const expected = JSON.parse(JSON.stringify(oneLog));
             expected.message = "new message";
-
             mockingoose(Model).toReturn(expected, 'findOneAndUpdate');
             mockingoose(Model).toReturn(oneLog, 'findOne');
             expected.id = expected._id;
@@ -146,20 +120,6 @@ describe('Log DAL tests', () => {
             expect(Model.Query.prototype.findOneAndUpdate).toHaveBeenCalledWith({ "_id": oneLog._id }, expected, { "new": true, "overwrite": true});
             const res = JSON.parse(JSON.stringify(result));
             expect(res.message).toBe(expected.message);
-        } catch (error) {
-            t.fail(error);
-        }
-    });
-
-    it('record a log', async () => {
-        try {
-            mockingoose(Model).toReturn({}, 'save');
-            const result = await log.record({ info: 'testing http errors'});
-            expect(Model.Query.prototype.findOne).not.toHaveBeenCalled();
-            const res = JSON.parse(JSON.stringify(result));
-            expect(res.code).toBe('ERROR');
-            expect(res.message).toBe('Error recorded and sent out as http response.');
-            expect(res.details).toStrictEqual({ info: 'testing http errors'});
         } catch (error) {
             t.fail(error);
         }

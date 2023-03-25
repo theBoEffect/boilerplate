@@ -1,5 +1,5 @@
 import t from './testhelper';
-import { say, sayMiddleware } from '../say';
+import { say, responseIntercept } from '../say';
 
 describe('Say library tests', () => {
     beforeEach(() => {
@@ -59,7 +59,7 @@ describe('Say library tests', () => {
                 return out;
             };
             const res = mockRes();
-            await sayMiddleware.responseIntercept(req, res, (err) => {
+            await responseIntercept(req, res, (err) => {
                 expect(err).toBe(undefined);
                 res.respond(say.partial({ a: 'test' }, 'TEST'));
                 expect(res.status).toHaveBeenCalledWith(206);

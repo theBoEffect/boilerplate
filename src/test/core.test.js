@@ -46,6 +46,7 @@ describe('Error handler tests', () => {
     });
 });
 
+
 describe('Middleware tests', () => {
     test('make sure cors headers are set', async () => {
         try {
@@ -78,8 +79,11 @@ describe('Middleware tests', () => {
                 error: "Bad Request",
                 id: expect.any(String),
                 message: "This is a test",
+                thrown: expect.any(Number),
                 statusCode: 400,
             };
+            console.info(expected);
+            console.info(res.respond);
             expect(res.respond).toHaveBeenCalledWith(expected);
         } catch (error) {
             t.fail(error);
@@ -100,10 +104,12 @@ describe('Middleware tests', () => {
     });
 });
 
+
 describe('Swagger / OpenAPI parser test', () => {
     test('make sure swagger.js returns contents correctly based on swagger.yaml', async () => {
         try {
-            const raw = yaml.parse(fs.readFileSync('./swagger.yaml', 'utf8'));
+            let raw = yaml.parse(fs.readFileSync('./swagger.yaml', 'utf8'));
+            raw = await openApi.agg(raw);
             const doc = await merge(await ref.dereference(raw));
             const swag = await openApi.init();
             expect(swag).toStrictEqual(doc);
@@ -182,9 +188,7 @@ describe('Test connectjs', () => {
         try {
             const mongoOptions = {
                 keepAlive: true,
-                connectTimeoutMS: 10000,
-                useNewUrlParser: true,
-                useUnifiedTopology: true
+                connectTimeoutMS: 10000
             };
             const result = connect.connectOptions();
             expect(result).toStrictEqual(mongoOptions);

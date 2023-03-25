@@ -36,6 +36,9 @@ async function aggregate(swag: any) {
 }
 
 export default {
+    async agg(doc: any) {
+        return aggregate(doc);
+    },
     // rebuilds every time
     async init(): Promise<any> {
         let oa;
