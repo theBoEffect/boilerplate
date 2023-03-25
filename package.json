@@ -9,10 +9,10 @@
     "dev": "NODE_ENV=dev nodemon ./src/start.ts",
     "swag-type": "ts-node openApiTypeGenerator.ts",
     "build": "yarn && tsc",
-    "package": "yarn test && yarn build && sls package",
-    "deploy": "yarn test && yarn build && sls deploy",
+    "package": "yarn test && sls package",
+    "deploy": "yarn test && sls deploy",
     "simple-deploy": "sls deploy",
-    "test": "yarn && jest",
+    "test": "yarn build && jest",
     "clean": "rm -rf ./node_modules"
   },
   "keywords": [
@@ -21,14 +21,13 @@
     "service",
     "microservice",
     "boilerplate",
-    "oidc",
-    "core-eos",
+    "serverless",
     "unitedeffects"
   ],
   "author": "theBoEffect",
   "person": {
     "name": "Bo Motlagh",
-    "email": "borzou@theboeffect.com",
+    "email": "bo@unitedeffects.com",
     "url": "https://theboeffect.com"
   },
   "homepage": "https://github.com/theboeffect",
