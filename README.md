@@ -77,4 +77,4 @@ If you'd rather use a different database or ODM, the following modifications are
     * homepage (your website or project website)
     * logo (your logo or project logo url)
 * Do the above quickstart now...
-* add src/api resources using the logging example
+* Add src/api resources using the (logging example)[./src/api/logging]
