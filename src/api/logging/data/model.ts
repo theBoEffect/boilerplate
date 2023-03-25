@@ -1,7 +1,8 @@
-import { Schema, model, Document } from 'mongoose';
+import {Schema, model, Document, Expression} from 'mongoose';
 import { v4 as uuid } from 'uuid';
+import { LogObject } from './type';
 
-const logSchema = new Schema<any>({
+const logSchema = new Schema<LogObject>({
     thrown: {
         type: Date,
         default: Date.now,
@@ -44,4 +45,4 @@ logSchema.set('toJSON', {
 });
 
 // Export the Mongoose model
-export default model<any>('Log', logSchema);
+export default model<LogObject>('Log', logSchema);

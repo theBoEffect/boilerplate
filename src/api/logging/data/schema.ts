@@ -1,9 +1,7 @@
 export default {
     schema: {
         "writeLog": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "$id": "http://json-schema.org/draft-07/schema#",
-            "title": "LogObject",
+            "title": "WriteLogObject",
             "type": "object",
             "required": [
                 "code"
@@ -29,8 +27,6 @@ export default {
             }
         },
         "Log": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "$id": "http://json-schema.org/draft-07/schema#",
             "title": "LogObject",
             "definitions": {
                 "write": {

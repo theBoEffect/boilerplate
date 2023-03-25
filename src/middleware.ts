@@ -4,7 +4,8 @@ import Boom from '@hapi/boom';
 import { v4 as uuid } from 'uuid';
 import handleErrors from './customErrorHandler';
 import { responseIntercept } from './say';
-import swag from './swagger';
+import openApi from './swagger';
+//import swag from './swagger';
 import mongoose from "mongoose";
 import auth from './auth/auth';
 import core from './api/core/core';
@@ -14,7 +15,7 @@ import {Operation} from "express-openapi-validate/dist/OpenApiDocument";
 const p = require('../package.json');
 
 const date = new Date();
-const schema = new OpenApiValidator(swag, { ajvOptions: { formats: { email: true, password: true, uri: true, url: true, uuid: true } } });
+//const schema = new OpenApiValidator(swag, { ajvOptions: { formats: { email: true, password: true, uri: true, url: true, uuid: true } } });
 
 export default {
     cores (req: Request, res: Response, next: NextFunction): any {
@@ -73,6 +74,8 @@ export default {
     },
     async schemaCheck(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
+            const swag = await openApi.getSpec();
+            const schema = new OpenApiValidator(swag, { ajvOptions: { formats: { email: true, password: true, uri: true, url: true, uuid: true } } });
             let path  = `${req.route.path}`;
             await Promise.all(Object.keys(req.params).map((p)=>{
                 path = path.replace(`:${p}`, `{${p}}`);

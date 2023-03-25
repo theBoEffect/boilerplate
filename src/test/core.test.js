@@ -7,7 +7,7 @@ import { OpenApiValidator } from 'express-openapi-validate';
 import t from './testhelper';
 jest.mock('express-openapi-validate');
 
-import swag from '../swagger';
+import openApi from '../swagger';
 import errorHandler from '../customErrorHandler';
 import m from '../middleware';
 import helper from '../helper';
@@ -90,6 +90,7 @@ describe('Middleware tests', () => {
         try {
             const req = { route: { path: '/logs/:id' }, params: ['id'], method: 'get' }, res = { respond: jest.fn() }, next = jest.fn();
             await m.schemaCheck(req, res, next);
+            const swag = await openApi.init();
             expect(OpenApiValidator).toHaveBeenCalledWith(swag, { ajvOptions: { formats: { email: true, password: true, uri: true, url: true, uuid: true } } });
             const mockValidator = OpenApiValidator.mock.instances[0];
             expect(mockValidator.validate).toHaveBeenCalled();
@@ -104,6 +105,7 @@ describe('Swagger / OpenAPI parser test', () => {
         try {
             const raw = yaml.parse(fs.readFileSync('./swagger.yaml', 'utf8'));
             const doc = await merge(await ref.dereference(raw));
+            const swag = await openApi.init();
             expect(swag).toStrictEqual(doc);
         } catch (error) {
             t.fail(error);

@@ -1,14 +1,14 @@
 import { IResponseOutput } from '../types'
 
 export default {
-    ok(data='OK', type='RESPONSE'): IResponseOutput {
+    ok(data: any = 'OK', type='RESPONSE'): IResponseOutput {
         return {
             statusCode: 200,
             type,
             data
         }
     },
-    created(data='Created', type='RESPONSE'): IResponseOutput {
+    created(data: any ='Created', type='RESPONSE'): IResponseOutput {
         return {
             statusCode: 201,
             type,
@@ -21,21 +21,21 @@ export default {
             type,
         }
     },
-    accepted(data='Accepted', type='RESPONSE'): IResponseOutput {
+    accepted(data: any ='Accepted', type='RESPONSE'): IResponseOutput {
         return {
             statusCode: 202,
             type,
             data
         }
     },
-    partial(data='Partial Content', type='RESPONSE'): IResponseOutput {
+    partial(data: any ='Partial Content', type='RESPONSE'): IResponseOutput {
         return {
             statusCode: 206,
             type,
             data
         }
     },
-    specifically(statusCode: number, data: string | object, type: string, error: any, message: string): IResponseOutput {
+    specifically(statusCode: number, data: any, type: string, error: any, message: string): IResponseOutput {
         return {
             statusCode,
             type,

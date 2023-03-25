@@ -1,4 +1,4 @@
-import Log from "../api/logging/model";
+import Log from "../api/logging/data/model";
 
 export interface IODataParams {
     $filter?: string,

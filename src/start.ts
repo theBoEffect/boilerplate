@@ -1,5 +1,6 @@
 import app from './app';
 import connection from './connection';
+import openApi from './swagger';
 import { config } from './config';
 
 let mongoConnect = config.MONGO;
@@ -38,13 +39,14 @@ function onError(error: any): void {
 }
 
 if(process.env.NODE_ENV === 'dev') console.info(`Connection string: ${mongoConnect}`);
-connection.create(mongoConnect);
 
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-const server = app.listen(port, () => {
+const server = app.listen(port, async () => {
     console.error(`Listening on ${port}`);
+    await connection.create(mongoConnect);
+    await openApi.init();
 });
 
 server.on('error', onError);

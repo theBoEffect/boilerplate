@@ -1,5 +1,5 @@
-import Model from '../api/logging/model';
-import log from '../api/logging/logs';
+import Model from '../api/logging/data/model';
+import log from '../api/logging/logic';
 import t from './testhelper';
 
 const mockingoose = require('mockingoose')

@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from '../app';
-import swagger from "../swagger";
+import openApi from "../swagger";
 import t from './testhelper';
 
 const config = require('../config');
@@ -24,7 +24,7 @@ describe('API tests', () => {
 
     it('should parse and returns swagger as json', async () => {
         try {
-            const swag = swagger;
+            const swag = await openApi.init();
             swag.info.version = pJson.version;
             swag.info.title = pJson.name;
             swag.info.description = `${pJson.description} by: <a href="${pJson.url}">${pJson.author}</a>`;

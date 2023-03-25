@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction} from "express";
-import swagger from '../../swagger';
+import openApi from '../../swagger';
 import modify from './swag';
 const pJson = require('../../../package.json');
 
@@ -29,12 +29,12 @@ export default {
     },
     async serveApiJson(req: Request, res: Response) {
         try{
-            let swag = JSON.parse(JSON.stringify(swagger));
+            let swag = JSON.parse(JSON.stringify(await openApi.getSpec()));
             swag = modify.updateSwag(swag);
             return res.json(swag);
         }catch (error) {
             console.info(error);
-            return res.json(swagger);
+            return res.json(await openApi.getSpec());
         }
     },
     async reDocApi(req: Request, res: Response, next: NextFunction) {

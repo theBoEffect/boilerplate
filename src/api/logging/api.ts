@@ -1,7 +1,7 @@
 import Boom from '@hapi/boom';
 import { Request, Response, NextFunction} from "express";
 import { say } from '../../say';
-import logs from './logs';
+import logs from './logic';
 
 const RESOURCE = 'LOG';
 
