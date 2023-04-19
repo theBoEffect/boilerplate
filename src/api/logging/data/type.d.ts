@@ -1,4 +1,4 @@
-export interface LogObject {
+export interface DataObject {
     id?: string;
     _id: string;
     thrown?: number;

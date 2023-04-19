@@ -9,10 +9,10 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Core, DoneFunction } from '../../types';
 import { Request } from 'express';
 import Boom from '@hapi/boom';
-import cache from './coreCache';
+import cache from './coreCache.js';
+import { config } from '../../config.js';
 
-const config = require('../../config');
-const AUDIENCE = `${config.PROTOCOL}://${config.SWAGGER}`;
+const AUDIENCE = `${config.PROTOCOL}://${config.HOST}`;
 
 const jwtCheck = /^([A-Za-z0-9\-_~+\/]+[=]{0,2})\.([A-Za-z0-9\-_~+\/]+[=]{0,2})(?:\.([A-Za-z0-9\-_~+\/]+[=]{0,2}))?$/;
 

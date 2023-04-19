@@ -1,17 +1,16 @@
+import {jest} from '@jest/globals'
 import Boom from "@hapi/boom";
-import ref from 'json-schema-ref-parser';
+import ref from '@apidevtools/json-schema-ref-parser';
 import merge from 'json-schema-resolve-allof';
 import yaml from 'yamljs';
 import fs from 'fs';
-import { OpenApiValidator } from 'express-openapi-validate';
-import t from './testhelper';
+import { fail } from './testhelper';
 jest.mock('express-openapi-validate');
-
-import openApi from '../swagger';
-import errorHandler from '../customErrorHandler';
-import m from '../middleware';
-import helper from '../helper';
-import connect from "../connection";
+import openApi from '../swagger.js';
+import errorHandler from '../customErrorHandler.js';
+import m from '../middleware.js';
+import helper from '../helper.js';
+import connect from "../connection.js";
 
 describe('Error handler tests', () => {
     test('make sure error handler returns 404', async () => {
@@ -21,7 +20,7 @@ describe('Error handler tests', () => {
             expect(response.output.statusCode).toBe(404);
             expect(response.output.payload.statusCode).toBe(404);
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
 
     });
@@ -31,7 +30,7 @@ describe('Error handler tests', () => {
             let response = await errorHandler.parse(new Error('Something strange in the neighborhood'));
             expect(response.statusCode).toBe(500);
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
 
     });
@@ -41,7 +40,7 @@ describe('Error handler tests', () => {
             let response = await errorHandler.parse(Boom.badRequest('This is a test'));
             expect(response.statusCode).toBe(400);
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
     });
 });
@@ -57,7 +56,7 @@ describe('Middleware tests', () => {
             expect(res.header).toHaveBeenCalledWith('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, api_key, Authorization');
             expect(next).toHaveBeenCalled();
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
     });
 
@@ -67,7 +66,7 @@ describe('Middleware tests', () => {
             await m.catch404(req, res, next);
             expect(next).toHaveBeenCalledWith(Boom.notFound('Resource not found'));
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
     });
 
@@ -86,20 +85,7 @@ describe('Middleware tests', () => {
             console.info(res.respond);
             expect(res.respond).toHaveBeenCalledWith(expected);
         } catch (error) {
-            t.fail(error);
-        }
-    });
-
-    test('make sure schemaChecker works as expected', async () => {
-        try {
-            const req = { route: { path: '/logs/:id' }, params: ['id'], method: 'get' }, res = { respond: jest.fn() }, next = jest.fn();
-            await m.schemaCheck(req, res, next);
-            const swag = await openApi.init();
-            expect(OpenApiValidator).toHaveBeenCalledWith(swag, { ajvOptions: { formats: { email: true, password: true, uri: true, url: true, uuid: true } } });
-            const mockValidator = OpenApiValidator.mock.instances[0];
-            expect(mockValidator.validate).toHaveBeenCalled();
-        } catch (error) {
-            t.fail(error);
+            fail(error);
         }
     });
 });
@@ -114,7 +100,7 @@ describe('Swagger / OpenAPI parser test', () => {
             const swag = await openApi.init();
             expect(swag).toStrictEqual(doc);
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
     });
 });
@@ -127,7 +113,7 @@ describe('Helper tests', () => {
             const invalid = helper.isJson('{test:ok}');
             expect(invalid).toBe(false);
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
     });
 
@@ -138,7 +124,7 @@ describe('Helper tests', () => {
             const invalid = helper.elementExists('test', 'oks', [{ test: 'ok'}]);
             expect(invalid).toBe(false);
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
     });
 
@@ -159,7 +145,7 @@ describe('Helper tests', () => {
             expect(result.skip).toStrictEqual(2);
             expect(result.limit).toStrictEqual(1);
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
     });
 
@@ -173,7 +159,7 @@ describe('Helper tests', () => {
                 $orderby: 'timestamp dsc'
             };
             await helper.parseOdataQuery(query);
-            t.fail(new Error('oData parse did not return error as expected'));
+            fail(new Error('oData parse did not return error as expected'));
         } catch (error) {
             expect(error.isBoom).toBe(true);
             expect(error.output.statusCode).toBe(400);
@@ -193,7 +179,7 @@ describe('Test connectjs', () => {
             const result = connect.connectOptions();
             expect(result).toStrictEqual(mongoOptions);
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
     });
 });

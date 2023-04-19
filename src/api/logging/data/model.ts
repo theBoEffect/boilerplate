@@ -1,8 +1,12 @@
-import {Schema, model, Document, Expression} from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
 import { v4 as uuid } from 'uuid';
-import { LogObject } from './type';
+import { DataObject } from './type';
 
-const logSchema = new Schema<LogObject>({
+// update this for your collection name
+const COLLECTION_NAME = 'logs';
+
+// actual parameters need to be updated for you data model
+const modelSchema = new Schema<DataObject>({
     thrown: {
         type: Date,
         default: Date.now,
@@ -29,13 +33,13 @@ const logSchema = new Schema<LogObject>({
     _id: false
 });
 
-logSchema.pre('save', done => done());
+modelSchema.pre('save', done => done());
 
-logSchema.virtual('id').get(function(){
+modelSchema.virtual('id').get(function(){
     return String(this._id);
 });
 
-logSchema.set('toJSON', {
+modelSchema.set('toJSON', {
     virtuals: true,
     transform: (doc: Document, ret: any) => {
         ret.id = ret._id;
@@ -45,4 +49,4 @@ logSchema.set('toJSON', {
 });
 
 // Export the Mongoose model
-export default model<LogObject>('Log', logSchema);
+export default model<DataObject>(COLLECTION_NAME, modelSchema);

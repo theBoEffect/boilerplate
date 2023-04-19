@@ -1,9 +1,10 @@
 {
   "name": "boilerplate-service",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "A microservice boilerplate that runs optionally as docker or lambda",
   "private": false,
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "start": "node ./dist/start.js",
     "dev": "NODE_ENV=dev nodemon ./src/start.ts",
@@ -12,7 +13,7 @@
     "package": "yarn test && sls package",
     "deploy": "yarn test && sls deploy",
     "simple-deploy": "sls deploy",
-    "test": "yarn build && jest",
+    "test": "yarn build && node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "clean": "rm -rf ./node_modules"
   },
   "keywords": [

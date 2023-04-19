@@ -1,41 +1,42 @@
 import Boom from '@hapi/boom';
 import { Request, Response, NextFunction} from "express";
-import { say } from '../../say';
-import logs from './logic';
+import { say } from '../../say/index.js';
+import biz from './logic.js';
 
+// update this for your resource
 const RESOURCE = 'LOG';
 
 const api = {
-    async writeLog(req: Request, res: Response, next: NextFunction): Promise<any> {
+    async write(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
             if (!req.body.message) throw Boom.preconditionRequired('message is required');
-            const result = await logs.writeLog(req.body);
+            const result = await biz.write(req.body);
             return res.respond(say.created(result, RESOURCE));
         } catch (error) {
             next(error);
         }
     },
-    async getLogs(req: Request, res: Response, next: NextFunction): Promise<any>  {
+    async get(req: Request, res: Response, next: NextFunction): Promise<any>  {
         try {
-            const result = await logs.getLogs(req.query);
+            const result = await biz.get(req.query);
             return res.respond(say.ok(result, RESOURCE));
         } catch (error) {
             next(error);
         }
     },
-    async getLog(req: Request, res: Response, next: NextFunction): Promise<any>  {
+    async getOne(req: Request, res: Response, next: NextFunction): Promise<any>  {
         try {
             if(!req.params.id) throw Boom.preconditionRequired('Must provide id');
-            const result = await logs.getLog(req.params.id);
+            const result = await biz.getOne(req.params.id);
             if (!result) throw Boom.notFound(`id requested was ${req.params.id}`);
             return res.respond(say.ok(result, RESOURCE));
         } catch (error) {
             next(error);
         }
     },
-    async patchLog(req: Request, res: Response, next: NextFunction): Promise<any>  {
+    async patch(req: Request, res: Response, next: NextFunction): Promise<any>  {
         try {
-            const result = await logs.patchLog(req.params.id, req.body);
+            const result = await biz.patch(req.params.id, req.body);
             return res.respond(say.ok(result, RESOURCE));
         } catch (error) {
             next(error);

@@ -1,2 +1,10 @@
-export { default as Root } from './root';
-export { default as Logs } from '../api/logging/routes';
+import express from "express";
+import Root from './root.js';
+import Log from '../api/logging/routes.js';
+const router = express.Router();
+
+// Add all routes here...
+router.use(Root);
+router.use('/api', Log);
+
+export default router;

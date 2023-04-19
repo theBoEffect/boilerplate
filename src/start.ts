@@ -1,7 +1,7 @@
-import app from './app';
-import connection from './connection';
-import openApi from './swagger';
-import { config } from './config';
+import app from './app.js';
+import connection from './connection.js';
+import openApi from './swagger.js';
+import { config } from './config.js';
 
 let mongoConnect = config.MONGO;
 

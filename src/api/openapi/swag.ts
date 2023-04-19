@@ -1,5 +1,8 @@
-import { config } from '../../config';
+import { config } from '../../config.js';
 import { IOpenAPI } from '../../types';
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
 const pJson = require('../../../package.json');
 
 export default {

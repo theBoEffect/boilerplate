@@ -1,11 +1,12 @@
 import axios from 'axios';
 import qs from 'querystring';
-import cache from './coreCache';
+import cache from './coreCache.js';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from "express";
 import { v4 as uuid } from 'uuid';
 import Boom from "@hapi/boom";
-const config = require('../../config');
+import { config } from '../../config.js';
+
 const CLIENT_ASSERTION_TYPE = 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer';
 
 // creates a client secret jwt for secure m2m client authorization

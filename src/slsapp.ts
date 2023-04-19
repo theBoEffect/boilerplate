@@ -1,8 +1,8 @@
 import sls from 'serverless-http'
-import app from './app';
-import connection from "./connection";
-import { config } from './config';
-import openApi from "./swagger";
+import app from './app.js';
+import connection from "./connection.js";
+import { config } from './config.js';
+import openApi from "./swagger.js";
 
 let mongoConnect = config.MONGO;
 

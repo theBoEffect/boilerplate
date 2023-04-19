@@ -28,33 +28,6 @@ export default {
         },
         "Log": {
             "title": "LogObject",
-            "definitions": {
-                "write": {
-                    "type": "object",
-                    "required": [
-                        "code"
-                    ],
-                    "properties": {
-                        "code": {
-                            "type": "string",
-                            "enum": [
-                                "ERROR",
-                                "SUCCESS",
-                                "NOTIFY",
-                                "LOG"
-                            ]
-                        },
-                        "message": {
-                            "type": "string",
-                            "description": "This should be any brief summary data in string format."
-                        },
-                        "details": {
-                            "type": "object",
-                            "description": "You can directly pipe any error message objects to here."
-                        }
-                    }
-                }
-            },
             "type": "object",
             "allOf": [
                 {

@@ -2,20 +2,20 @@ import { OpenApiValidator } from 'express-openapi-validate';
 import { NextFunction, ErrorRequestHandler, Request, Response } from 'express';
 import Boom from '@hapi/boom';
 import { v4 as uuid } from 'uuid';
-import handleErrors from './customErrorHandler';
-import { responseIntercept } from './say';
-import openApi from './swagger';
-//import swag from './swagger';
+import handleErrors from './customErrorHandler.js';
+import { responseIntercept } from './say/index.js';
+import openApi from './swagger.js';
 import mongoose from "mongoose";
-import auth from './auth/auth';
-import core from './api/core/core';
-import permissions from './permissions';
+import auth from './auth/auth.js';
+import core from './api/core/core.js';
+import permissions from './permissions.js';
 import {Operation} from "express-openapi-validate/dist/OpenApiDocument";
+import { createRequire } from "module";
 
+const require = createRequire(import.meta.url);
 const p = require('../package.json');
 
 const date = new Date();
-//const schema = new OpenApiValidator(swag, { ajvOptions: { formats: { email: true, password: true, uri: true, url: true, uuid: true } } });
 
 export default {
     cores (req: Request, res: Response, next: NextFunction): any {
