@@ -12,6 +12,7 @@ A boilerplate typescript micro service that runs as docker or lambda. Click "Use
 ## Key Stack Components
 
 * TypeScript
+* ESM
 * Express
 * Mongoose -> MongoDB
 * Serverless-http
@@ -63,7 +64,7 @@ If you'd rather use a different database or ODM, the following modifications are
     * I find the easiest way to do this is via docker in a terminal
     * docker run -p 27017:27017 mongo
 * Copy ./.env_ci to ./.env and modify env.dev.json to set runtime configuration data
-* yarn test (will run yarn and build)
+* yarn test (will install dependencies and build first)
 * yarn dev
 * navigate to localhost:3000
 
