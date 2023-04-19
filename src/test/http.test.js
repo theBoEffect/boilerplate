@@ -1,9 +1,12 @@
+import {jest} from '@jest/globals'
 import request from 'supertest';
 import app from '../app';
 import openApi from "../swagger";
-import t from './testhelper';
+import { fail } from './testhelper.js';
+import { config } from '../config.js';
+import { createRequire } from "module";
 
-const config = require('../config');
+const require = createRequire(import.meta.url);
 const pJson = require('../../package');
 
 describe('API tests', () => {
@@ -17,7 +20,7 @@ describe('API tests', () => {
                 .get('/api/xyz');
             expect(res.statusCode).toEqual(404);
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
 
     });
@@ -35,7 +38,7 @@ describe('API tests', () => {
             expect(res.statusCode).toEqual(200);
             expect(res.body).toStrictEqual(swag);
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
     });
 
@@ -46,7 +49,7 @@ describe('API tests', () => {
             expect(res.statusCode).toEqual(200);
             expect(res.body.server).toStrictEqual('running');
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
     });
 
@@ -64,7 +67,7 @@ describe('API tests', () => {
                 }
             });
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
     });
 });

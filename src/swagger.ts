@@ -2,7 +2,7 @@ import ref from '@apidevtools/json-schema-ref-parser';
 import merge from 'json-schema-resolve-allof';
 import yaml from 'yamljs';
 import fs from 'fs';
-import logSchema from './api/logging/data/schema';
+import logSchema from './api/logging/data/schema.js';
 const swag = yaml.parse(fs.readFileSync('./swagger.yaml', 'utf8'));
 const instances = new Map();
 

@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction} from "express";
-import openApi from '../../swagger';
-import modify from './swag';
+import openApi from '../../swagger.js';
+import modify from './swag.js';
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
 const pJson = require('../../../package.json');
 
 export default {

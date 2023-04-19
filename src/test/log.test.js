@@ -1,7 +1,10 @@
+import {jest} from '@jest/globals'
 import Model from '../api/logging/data/model';
 import log from '../api/logging/logic';
-import t from './testhelper';
+import { fail } from './testhelper.js';
+import { createRequire } from "module";
 
+const require = createRequire(import.meta.url);
 const mockingoose = require('mockingoose')
 
 
@@ -56,13 +59,13 @@ describe('Log DAL tests', () => {
                     "test": "test"
                 }
             };
-            const result = await log.writeLog(data);
+            const result = await log.write(data);
             console.info(result);
             expect(Model.prototype.save).toHaveBeenCalled();
             const res = JSON.parse(JSON.stringify(result));
             expect(res).toMatchObject(expected);
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
 
     });
@@ -73,12 +76,12 @@ describe('Log DAL tests', () => {
             expected.id = expected._id;
             delete expected._id;
             mockingoose(Model).toReturn(oneLog, 'findOne');
-            const result = await log.getLog(oneLog._id);
+            const result = await log.getOne(oneLog._id);
             expect(Model.Query.prototype.findOne).toHaveBeenCalledWith({ _id: oneLog._id });
             const res = JSON.parse(JSON.stringify(result));
             expect(res).toMatchObject(expected);
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
     });
 
@@ -91,12 +94,12 @@ describe('Log DAL tests', () => {
             delete expected[1]._id;
             mockingoose(Model).toReturn(multiLogs, 'find');
             const q = { $filter: "code eq 'ERROR'" };
-            const result = await log.getLogs(q);
+            const result = await log.get(q);
             expect(Model.Query.prototype.find).toHaveBeenCalledWith({ code: 'ERROR' });
             const res = JSON.parse(JSON.stringify(result));
             expect(res).toMatchObject(expected);
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
     });
 
@@ -104,7 +107,7 @@ describe('Log DAL tests', () => {
         try {
             const expected = JSON.parse(JSON.stringify(oneLog));
             expected.message = "new message";
-            mockingoose(Model).toReturn(expected, 'findOneAndUpdate');
+            mockingoose(Model).toReturn(expected, 'findOneAndReplace');
             mockingoose(Model).toReturn(oneLog, 'findOne');
             expected.id = expected._id;
             delete expected._id;
@@ -115,13 +118,13 @@ describe('Log DAL tests', () => {
                     "value": expected.message
                 }
             ];
-            const result = await log.patchLog(oneLog._id, update);
+            const result = await log.patch(oneLog._id, update);
             expect(Model.Query.prototype.findOne).toHaveBeenCalledWith({ _id: oneLog._id });
-            expect(Model.Query.prototype.findOneAndUpdate).toHaveBeenCalledWith({ "_id": oneLog._id }, expected, { "new": true, "overwrite": true});
+            expect(Model.Query.prototype.findOneAndReplace).toHaveBeenCalledWith({ "_id": oneLog._id }, expected, { "new": true, "overwrite": true});
             const res = JSON.parse(JSON.stringify(result));
             expect(res.message).toBe(expected.message);
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
     });
 

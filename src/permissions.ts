@@ -2,7 +2,7 @@ import Boom from '@hapi/boom';
 import { NextFunction, Request, Response } from 'express';
 import { IAuthInfo } from "./types";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { config } from './config';
+import { config } from './config.js';
 
 const api = {
     checkPermission(permissions: [string], check: string): boolean {

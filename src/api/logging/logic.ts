@@ -1,29 +1,31 @@
 import jsonPatch from 'jsonpatch';
-import dal from './dal';
-import helper from '../../helper';
+import dal from './dal.js';
+import helper from '../../helper.js';
 import { IODataParams } from "../../types";
-import { LogObject } from "./data/type";
+import { DataObject } from "./data/type";
 
 export default {
-    async writeLog(data: any): Promise<LogObject> {
-        const logData: LogObject = data;
-        logData.code = data.code.toUpperCase();
-        if(!logData.thrown) logData.thrown = Date.now();
-        return dal.writeLogObject(logData);
+    async write(data: any): Promise<DataObject> {
+        const writeData: DataObject = data;
+        //specific to the example - safe to remove
+        writeData.code = data.code.toUpperCase();
+        //specific to the example - safe to remove
+        if(!writeData.thrown) writeData.thrown = Date.now();
+        return dal.write(writeData);
     },
 
-    async getLogs(q: IODataParams): Promise<LogObject[]> {
+    async get(q: IODataParams): Promise<DataObject[]> {
         const query = await helper.parseOdataQuery(q);
-        return dal.getLogs(query);
+        return dal.get(query);
     },
 
-    async getLog(id: string): Promise<LogObject> {
-        return dal.getLog(id);
+    async getOne(id: string): Promise<DataObject> {
+        return dal.getOne(id);
     },
 
-    async patchLog(id: string, update: any[]): Promise<LogObject> {
-        const log = await dal.getLog(id);
-        const patched: LogObject = jsonPatch.apply_patch(JSON.parse(JSON.stringify(log)), update);
-        return dal.patchLog(id, patched);
+    async patch(id: string, update: any[]): Promise<DataObject> {
+        const data = await dal.getOne(id);
+        const patched: DataObject = jsonPatch.apply_patch(JSON.parse(JSON.stringify(data)), update);
+        return dal.patch(id, patched);
     }
 };

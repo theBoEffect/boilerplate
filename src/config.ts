@@ -1,9 +1,11 @@
 import { IConfigs } from './types';
 import fs from 'fs';
+import { createRequire } from "module";
 
 const env = process.env.NODE_ENV || 'dev';
 const dir = (fs.existsSync('./.env')) ? '.env' : '.env_ci';
-const envVars = require(`../${dir}/env.${env}`);
+const require = createRequire(import.meta.url);
+const envVars = require(`../${dir}/env.${env}.json`);
 
 export const config: IConfigs = {
     ENV: process.env.NODE_ENV || envVars.NODE_ENV || 'dev',

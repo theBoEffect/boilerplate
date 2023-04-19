@@ -5,6 +5,7 @@ export default {
         return {
             statusCode: 200,
             type,
+            count: (Array.isArray(data)) ? data.length : undefined,
             data
         }
     },

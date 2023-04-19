@@ -1,5 +1,6 @@
-import t from './testhelper';
-import { say, responseIntercept } from '../say';
+import {jest} from '@jest/globals';
+import { fail } from './testhelper.js';
+import { say, responseIntercept } from '../say/index.js';
 
 describe('Say library tests', () => {
     beforeEach(() => {
@@ -17,6 +18,7 @@ describe('Say library tests', () => {
         expect(say.ok({success: 'ok'}, 'TEST')).toStrictEqual({
             statusCode: 200,
             type: 'TEST',
+            count: undefined,
             data: { success: 'ok' }
         })
     });
@@ -66,7 +68,7 @@ describe('Say library tests', () => {
                 expect(res.json).toHaveBeenCalledWith({ type: "TEST", data: { a: 'test' }});
             })
         } catch (error) {
-            t.fail(error);
+            fail(error);
         }
 
     })

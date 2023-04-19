@@ -1,6 +1,6 @@
 import NodeCache from 'node-cache';
 import { Core } from '../../types';
-import helper from '../../helper';
+import helper from '../../helper.js';
 
 const myCache = new NodeCache();
 

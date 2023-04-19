@@ -1,6 +1,6 @@
 import passport from 'passport';
 import { Strategy as BearerStrategy } from 'passport-http-bearer';
-import core from '../api/core/auth';
+import core from '../api/core/auth.js';
 
 passport.use('oidc', new BearerStrategy({
 	passReqToCallback: true

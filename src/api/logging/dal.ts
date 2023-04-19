@@ -1,20 +1,19 @@
-import Log from './data/model';
+import Model from './data/model.js';
 import { IMongoQuery } from "../../types";
-import {LogObject} from "./data/type";
+import {DataObject} from "./data/type";
 
 export default {
-    //todo any type
-    async writeLogObject(data: LogObject): Promise<any> {
-        const log = new Log(data);
-        return log.save();
+    async write(data: DataObject): Promise<any> {
+        const model = new Model(data);
+        return model.save();
     },
-    async getLogs(query: IMongoQuery): Promise<any> {
-        return Log.find(query.query).select(query.projection).sort(query.sort).skip(query.skip).limit(query.limit);
+    async get(query: IMongoQuery): Promise<any> {
+        return Model.find(query.query).select(query.projection).sort(query.sort).skip(query.skip).limit(query.limit);
     },
-    async getLog(id: string): Promise<any> {
-        return Log.findOne( { _id: id });
+    async getOne(id: string): Promise<any> {
+        return Model.findOne( { _id: id });
     },
-    async patchLog(id: string, data: LogObject): Promise<any> {
-        return Log.findOneAndUpdate({ _id: id }, data, { new: true, overwrite: true })
+    async patch(id: string, data: DataObject): Promise<any> {
+        return Model.findOneAndReplace({ _id: id }, data, { new: true, overwrite: true })
     }
 };
