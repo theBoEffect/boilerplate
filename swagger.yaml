@@ -26,7 +26,7 @@ paths:
                   type:
                     type: string
                   data:
-                    $ref: '#/components/schemas/Log'
+                    $ref: '#/components/schemas/log'
         '405':
           description: Invalid input
         '500':
@@ -88,7 +88,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Log'
+                      $ref: '#/components/schemas/log'
   '/logs/{id}':
     get:
       tags:
@@ -114,7 +114,7 @@ paths:
                     type: string
                     default: log
                   data:
-                    $ref: '#/components/schemas/Log'
+                    $ref: '#/components/schemas/log'
         '400':
           description: Invalid code supplied
         '404':
@@ -143,7 +143,7 @@ paths:
                     type: string
                     default: Log
                   data:
-                    $ref: '#/components/schemas/Log'
+                    $ref: '#/components/schemas/log'
         '405':
           description: Invalid input
         '500':

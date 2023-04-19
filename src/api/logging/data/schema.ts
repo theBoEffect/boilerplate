@@ -1,7 +1,6 @@
 export default {
     schema: {
         "writeLog": {
-            "title": "WriteLogObject",
             "type": "object",
             "required": [
                 "code"
@@ -26,8 +25,7 @@ export default {
                 }
             }
         },
-        "Log": {
-            "title": "LogObject",
+        "log": {
             "type": "object",
             "allOf": [
                 {

@@ -1,7 +1,8 @@
 import { compile } from 'json-schema-to-typescript';
-import openApi from './src/swagger';
+import openApi from './src/swagger.js';
 import clipboard from "clipboardy";
 
+// example call - yarn swag-type log
 (async(object, name) => {
     const args = process.argv;
     const o = (object) ? object : args[2];
@@ -18,6 +19,5 @@ import clipboard from "clipboardy";
     const swaggerObject = swagger.components.schemas[o];
     const ts = await compile(swaggerObject, n)
     clipboard.writeSync(ts);
-    console.info(ts)
     console.info('SUCCESS! - the above type definition is in your clipboard. Simply go to the file you wish and paste it in to modify');
 })()
