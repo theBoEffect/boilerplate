@@ -45,7 +45,7 @@
     "jsonwebtoken": "^9.0.0",
     "jwks-rsa": "^3.0.1",
     "moment": "^2.29.4",
-    "mongoose": "^7.0.2",
+    "mongoose": "^7.3.3",
     "morgan": "^1.10.0",
     "node-cache": "^5.1.2",
     "odata-v4-mongodb": "^0.1.12",
