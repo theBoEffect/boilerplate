@@ -4,7 +4,6 @@ let i = 0;
 const connect = {
     connectOptions(): ConnectOptions {
         return {
-            keepAlive: true,
             connectTimeoutMS: 10000
         };
     },
